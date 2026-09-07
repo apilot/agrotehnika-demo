@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Демо-макеты — С-Агротехника · витрина вариантов</title>
+<meta name="theme-color" content="#353030">
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Витрина демо-макетов редизайна сайта С-Агротехника">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = { theme: { extend: { colors: {
+    ink: '#353030', inkdeep: '#2B2828', paper: '#FBF8EE', line: '#E9E3D6',
+    agro: '#FECC00', agrodeep: '#D6A800', burgundy: '#77263B'
+  } } } };
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Tektur:wght@500;600;700;800&family=Onest:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  .disp { font-family: 'Tektur', sans-serif; }
+  body { font-family: 'Onest', sans-serif; background: #FBF8EE; color: #353030; }
+  a:focus-visible, button:focus-visible { outline: 2.5px solid #FECC00; outline-offset: 2px; }
+  .frame { box-shadow: 0 1px 0 rgba(53,48,48,.12), 0 24px 48px -24px rgba(53,48,48,.35); }
+  .frame img { transition: transform .4s ease; }
+  .frame:hover img { transform: scale(1.015); }
+</style>
+</head>
+<body>
+<a href="#v1" class="sr-only focus:not-sr-only focus:absolute focus:z-50 focus:top-2 focus:left-2 focus:bg-agro focus:text-ink focus:px-4 focus:py-2 focus:rounded-md focus:font-bold">К варианту 1</a>
+
+<main class="max-w-5xl mx-auto px-4 sm:px-6 py-12 sm:py-16">
+
+  <p class="mono text-[11px] tracking-[.22em] text-burgundy font-semibold">ДЕМО-МАКЕТЫ · НЕ ПУБЛИКАЦИЯ</p>
+  <h1 class="disp font-bold text-[28px] sm:text-[38px] tracking-tight mt-3 text-balance">Варианты нового сайта <span class="text-burgundy">С-Агротехника</span></h1>
+  <p class="mt-3 text-[15.5px] text-ink/75 max-w-2xl">Каждый вариант — рабочие страницы с переходами: главная и каталог запчастей. Откройте, полистайте, вернитесь сюда и сравните.</p>
+
+  <!-- ВАРИАНТ 1 -->
+  <section id="v1" class="mt-10 sm:mt-14 scroll-mt-6">
+    <div class="flex flex-wrap items-end justify-between gap-3">
+      <div>
+        <p class="mono text-[11px] tracking-[.18em] text-ink/70">ВАРИАНТ 1</p>
+        <h2 class="disp font-bold text-[22px] sm:text-[26px] tracking-tight mt-1">Поиск по артикулу — главный герой</h2>
+      </div>
+      <a href="index_v1.html" class="inline-flex items-center h-11 px-6 rounded-md bg-agro text-ink text-[14px] font-bold shadow-[0_2px_0_#353030] hover:bg-agrodeep transition-colors">Открыть демо →</a>
+    </div>
+
+    <a href="index_v1.html" class="block mt-5 rounded-lg overflow-hidden border border-line frame bg-white" aria-label="Открыть вариант 1">
+      <img src="assets/preview_v1.jpg" alt="Вариант 1: первый экран с поиском по артикулу" class="w-full block" width="1100" height="688" fetchpriority="high">
+    </a>
+
+    <div class="mt-4 grid sm:grid-cols-3 gap-3 text-[13.5px]">
+      <div class="rounded-md border border-line bg-white/60 px-4 py-3">
+        <p class="font-semibold">2 страницы</p>
+        <p class="text-ink/70 mt-0.5">Главная + <a href="catalog_v1.html" class="text-burgundy underline decoration-burgundy/30 underline-offset-2">каталог запчастей</a> (входы: поиск, чипы двигателей, меню)</p>
+      </div>
+      <div class="rounded-md border border-line bg-white/60 px-4 py-3">
+        <p class="font-semibold">Фирменный стиль</p>
+        <p class="text-ink/70 mt-0.5">Ваш логотип, бордовый + жёлтый, артикулы на жёлтых маркерах</p>
+      </div>
+      <div class="rounded-md border border-line bg-white/60 px-4 py-3">
+        <p class="font-semibold">Сценарий</p>
+        <p class="text-ink/70 mt-0.5">«Деталь по артикулу — найдём за 10 секунд»: поиск → карточка → запрос цены</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ВАРИАНТ 2 -->
+  <section class="mt-10 sm:mt-14">
+    <div class="flex flex-wrap items-end justify-between gap-3">
+      <div>
+        <p class="mono text-[11px] tracking-[.18em] text-ink/70">ВАРИАНТ 2</p>
+        <h2 class="disp font-bold text-[22px] sm:text-[26px] tracking-tight mt-1">Витрина техники + спокойный минимализм</h2>
+      </div>
+      <a href="index_v2.html" class="inline-flex items-center h-11 px-6 rounded-full border-[1.5px] border-burgundy text-burgundy text-[14px] font-bold hover:bg-burgundy hover:text-white transition-colors">Открыть демо →</a>
+    </div>
+
+    <a href="index_v2.html" class="block mt-5 rounded-lg overflow-hidden border border-line frame bg-white" aria-label="Открыть вариант 2">
+      <img src="assets/preview_v2.jpg" alt="Вариант 2: полноэкранный первый экран с фотом техники" class="w-full block" width="1100" height="688" loading="lazy" decoding="async">
+    </a>
+
+    <div class="mt-4 grid sm:grid-cols-3 gap-3 text-[13.5px]">
+      <div class="rounded-md border border-line bg-white/60 px-4 py-3">
+        <p class="font-semibold">2 страницы</p>
+        <p class="text-ink/70 mt-0.5">Главная + <a href="catalog_v2.html" class="text-burgundy underline decoration-burgundy/30 underline-offset-2">каталог запчастей</a> (входы: меню, поиск, hero-кнопка)</p>
+      </div>
+      <div class="rounded-md border border-line bg-white/60 px-4 py-3">
+        <p class="font-semibold">Минимализм</p>
+        <p class="text-ink/70 mt-0.5">Техника — главный герой; бордовый — единственный акцент, белый фон, воздух</p>
+      </div>
+      <div class="rounded-md border border-line bg-white/60 px-4 py-3">
+        <p class="font-semibold">Сценарий</p>
+        <p class="text-ink/70 mt-0.5">«Техника для поля, запчасти для техники»: витрина → каталог → WhatsApp-запрос</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="mt-14 pt-6 border-t border-line flex flex-wrap gap-3 justify-between text-[12.5px] text-ink/60">
+    <p>Демо-макеты для обсуждения · Алексей Бояринов · +7 927 123-23-41</p>
+    <p class="mono">С-АГРОТЕХНИКА · ЭНГЕЛЬС</p>
+  </footer>
+
+</main>
+</body>
+</html>

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Запчасти по артикулу — каталог · демо-макет</title>
+<meta name="theme-color" content="#353030">
+<meta name="robots" content="noindex, nofollow">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = { theme: { extend: { colors: {
+    ink: '#353030', inkdeep: '#2B2828', paper: '#FBF8EE', agro: '#FECC00', agrodeep: '#D6A800', burgundy: '#77263B', stock: '#78B270', line: '#E9E3D6'
+  } } } };
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Tektur:wght@500;600;700;800&family=Onest:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Onest', sans-serif; background: #FBF8EE; color: #353030; overflow-x: clip; }
+  .disp { font-family: 'Tektur', sans-serif; }
+  .mono { font-family: 'JetBrains Mono', monospace; }
+  .skip { position: absolute; left: -9999px; }
+  .skip:focus { left: 8px; top: 8px; z-index: 60; background: #353030; color: #fff; padding: 8px 14px; border-radius: 6px; }
+  :focus-visible { outline: 2px solid #FECC00; outline-offset: 2px; border-radius: 4px; }
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+  section[id] { scroll-margin-top: 88px; }
+  a, button, input, textarea { touch-action: manipulation; -webkit-tap-highlight-color: rgba(53,48,48,.12); }
+  h1, h2 { text-wrap: balance; }
+  html { color-scheme: light; }
+  /* Мотив «этикетка отгрузки»: пунктир и штрихкод */
+  .ticket { border: 1.5px dashed rgba(53,48,48,.35); }
+  .ticket-edge { background-image: repeating-linear-gradient(90deg, transparent 0 6px, #353030 6px 12px); height: 8px; opacity: .18; }
+  .barcode { background-image: repeating-linear-gradient(90deg,
+      #353030 0 2px, transparent 2px 4px, #353030 4px 7px, transparent 7px 9px,
+      #353030 9px 10px, transparent 10px 14px, #353030 14px 16px, transparent 16px 17px,
+      #353030 17px 21px, transparent 21px 23px); }
+</style>
+</head>
+<body class="antialiased">
+<a href="#zayavka" class="skip">Перейти к запросу</a>
+
+<!-- ТОПБАР -->
+<div class="bg-ink text-white/80 text-[12px]">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 h-9 flex items-center justify-between gap-4">
+    <span class="mono tracking-[.12em] truncate">САРАТОВ · ЭНГЕЛЬС · БАЛАКОВО · БАЛАШОВ · ПУГАЧЁВ</span>
+    <span class="hidden sm:flex items-center gap-5 shrink-0">
+      <a href="mailto:saratov@c-agro.ru" class="hover:text-agro transition-colors">saratov@c-agro.ru</a>
+      <a href="tel:+78452390081" class="mono text-white/90 hover:text-agro transition-colors">8 (8452) 39-00-81</a>
+    </span>
+  </div>
+</div>
+
+<!-- ШАПКА -->
+<header class="sticky top-0 z-50 bg-paper/95 backdrop-blur border-b border-line">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center gap-4">
+    <a href="#" class="flex items-center gap-3 shrink-0" aria-label="С-Агротехника — на главную">
+      <img src="assets/logo-footer.svg" alt="С-Агротехника" class="h-11 w-auto" width="174" height="73">
+      <span class="hidden lg:block leading-none border-l border-line pl-3">
+        <span class="block text-[11px] mono tracking-[.18em] text-ink/70">ЗАПЧАСТИ · ТЕХНИКА · 5 ГОРОДОВ</span>
+      </span>
+    </a>
+    <a href="tel:+78452390081" class="ml-auto hidden sm:flex items-center gap-2 mono text-[13.5px] font-semibold hover:text-burgundy transition-colors" aria-label="Позвонить">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#77263B" stroke-width="2" class="shrink-0"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 2 .7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.9.5 2.8.6a2 2 0 0 1 1.7 2Z"/></svg>
+      <span>8 (8452) 39-00-81</span>
+    </a>
+    <a href="tel:+78452390081" class="ml-auto sm:hidden" aria-label="Позвонить">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#77263B" stroke-width="2" class="inline"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 2 .7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.9.5 2.8.6a2 2 0 0 1 1.7 2Z"/></svg>
+    </a>
+    <a href="index_v1.html#zayavka" class="hidden md:inline-flex items-center h-10 px-5 rounded-md border-[1.5px] border-ink text-ink text-[13px] font-bold hover:bg-ink hover:text-agro transition-colors shrink-0">Запросить цену</a>
+    <button id="menuBtn" class="md:hidden w-10 h-10 grid place-items-center rounded-md border border-ink/20" aria-label="Меню" aria-expanded="false" aria-controls="mobileMenu">
+      <span class="block w-5 space-y-[5px]"><span class="block h-[2.5px] rounded-full bg-ink"></span><span class="block h-[2.5px] rounded-full bg-ink"></span><span class="block h-[2.5px] rounded-full bg-ink"></span></span>
+    </button>
+  </div>
+</header>
+<div id="mobileMenu" class="md:hidden hidden border-t border-line bg-paper">
+  <nav class="px-4 py-3">
+    <a href="catalog.html" aria-current="page" class="menu-link block py-3 border-b border-line text-[15px] font-medium">Запчасти</a>
+    <a href="index_v1.html#tech" class="menu-link block py-3 border-b border-line text-[15px] font-medium">Техника</a>
+    <a href="index_v1.html#how" class="menu-link block py-3 border-b border-line text-[15px] font-medium">Как заказать</a>
+    <a href="tel:+78452390081" class="block py-3 border-b border-line mono text-[15px]">8 (8452) 39-00-81</a>
+    <a href="index_v1.html#zayavka" class="menu-link block mt-3 mb-2 h-12 leading-[3rem] text-center rounded-md bg-agro text-ink font-bold">Запросить цену</a>
+  </nav>
+</div>
+
+
+<main>
+  <!-- ЗАГОЛОВОК -->
+  <section class="pt-10 lg:pt-14 pb-6">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      <nav class="mono text-[11px] text-ink/50 mb-4" aria-label="Хлебные крошки"><a href="index_v1.html" class="hover:text-burgundy transition-colors">Главная</a> / ЗАПЧАСТИ</nav>
+      <p class="mono text-[11px] tracking-[.2em] text-burgundy mb-2">КАТАЛОГ · ЦЕНЫ ПО ЗАПРОСУ</p>
+      <h1 class="disp font-bold text-[26px] sm:text-[34px] lg:text-[40px] tracking-tight leading-[1.08]" style="text-wrap:balance">Запчасти по артикулу — ТНВД, помпы, актуаторы</h1>
+      <p class="mt-3 text-ink/75 text-[15px] max-w-2xl">Оригиналы и аналоги HAFFEN · WEICHAI · BOSCH · CUMMINS для двигателей ISF2.8 / ISF3.8 / 6CT / WP10. Позиции на складе — отправка за 1 день; остальное — под заказ.</p>
+    </div>
+  </section>
+
+  <!-- ПОИСК (sticky) -->
+  <section class="sticky top-[72px] z-30 bg-paper/95 backdrop-blur border-y border-line py-3">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      <form id="q" onsubmit="return false" class="flex gap-2" role="search">
+        <label for="q-input" class="sr-only">Поиск по артикулу</label>
+        <div class="relative flex-1">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#353030" stroke-width="2" class="absolute left-4 top-1/2 -translate-y-1/2 opacity-60"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <input id="q-input" type="search" inputmode="search" placeholder="Артикул: 0445020119 · 5263374 · 3800974" class="mono w-full h-12 pl-11 pr-4 rounded-md border-[1.5px] border-ink bg-white text-[14px] placeholder:text-ink/40 focus:border-burgundy outline-none">
+        </div>
+        <button type="submit" class="h-12 px-7 rounded-md bg-agro text-ink text-[14px] font-bold hover:bg-agrodeep transition-colors shadow-[0_2px_0_#353030]">Найти</button>
+      </form>
+      <div class="flex flex-wrap gap-2 mt-3 mono text-[12px]" aria-label="Быстрый подбор">
+        <span class="text-ink/50 pt-1">ДВИГАТЕЛЬ:</span>
+        <a href="#" class="px-3 py-1 rounded-full bg-ink text-agro font-semibold">Все</a>
+        <a href="#" class="px-3 py-1 rounded-full border border-line hover:border-burgundy hover:text-burgundy transition-colors">ISF2.8</a>
+        <a href="#" class="px-3 py-1 rounded-full border border-line hover:border-burgundy hover:text-burgundy transition-colors">ISF3.8</a>
+        <a href="#" class="px-3 py-1 rounded-full border border-line hover:border-burgundy hover:text-burgundy transition-colors">6CT</a>
+        <a href="#" class="px-3 py-1 rounded-full border border-line hover:border-burgundy hover:text-burgundy transition-colors">WP10</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ФИЛЬТР-СТРОКА -->
+  <section class="py-6">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 flex flex-wrap items-center gap-x-6 gap-y-3 text-[13px]">
+      <div class="flex items-center gap-2 flex-wrap">
+        <span class="mono text-[11px] tracking-[.15em] text-ink/60">БРЕНД</span>
+        <a href="#" class="px-3 py-1.5 rounded-md border border-ink bg-ink text-agro font-semibold">Все</a>
+        <a href="#" class="px-3 py-1.5 rounded-md border border-line hover:border-burgundy transition-colors">HAFFEN</a>
+        <a href="#" class="px-3 py-1.5 rounded-md border border-line hover:border-burgundy transition-colors">WEICHAI</a>
+        <a href="#" class="px-3 py-1.5 rounded-md border border-line hover:border-burgundy transition-colors">BOSCH</a>
+        <a href="#" class="px-3 py-1.5 rounded-md border border-line hover:border-burgundy transition-colors">CUMMINS</a>
+      </div>
+      <a href="#" class="text-ink/50 hover:text-burgundy transition-colors text-[12.5px]">× Сбросить</a>
+      <span class="mono text-[12px] text-ink/60 ml-auto">НАЙДЕНО: 8 позиций <!-- TODO: реальный счётчик из miniShop2 --></span>
+    </div>
+  </section>
+
+  <!-- СЕТКА -->
+  <section class="pb-14 lg:pb-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+      <article class="ticket bg-white border border-dashed border-ink/35 rounded-md p-4 flex flex-col hover:shadow-[0_2px_0_#353030] transition-shadow">
+        <div class="aspect-square bg-white grid place-items-center overflow-hidden"><img src="assets/tnvd.jpg" alt="ТНВД ISF2.8 (топливный насос высокого давления)" class="w-[88%] h-[88%] object-contain" width="435" height="435" loading="lazy" decoding="async"></div>
+        <h3 class="mt-4 text-[14.5px] font-semibold leading-snug text-ink min-h-[2.6em]">ТНВД ISF2.8 (топливный насос высокого давления)</h3>
+        <p class="mt-2"><span class="mono text-[11px] font-semibold px-1.5 py-0.5 bg-agro text-ink">АРТ. 0445020119</span></p>
+        <p class="mono text-[11px] text-ink/70 mt-1.5">ДВИГАТЕЛЬ ISF2.8 · <span class="font-semibold text-ink">HAFFEN</span></p>
+        <button type="button" class="mt-auto pt-4"><span class="block h-10 leading-10 text-center rounded-md bg-ink text-white text-[13px] font-bold hover:bg-inkdeep transition-colors w-full">Запросить цену</span></button>
+      </article>
+      <article class="ticket bg-white border border-dashed border-ink/35 rounded-md p-4 flex flex-col hover:shadow-[0_2px_0_#353030] transition-shadow">
+        <div class="aspect-square bg-white border border-dashed border-burgundy/40 grid place-items-center"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#77263B" stroke-width="1.6" opacity=".55"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2Z"/><circle cx="12" cy="13" r="4"/></svg><p class="mono text-[10px] tracking-[.15em] text-burgundy/60 mt-2">ФОТО-СЛОТ · 02</p></div>
+        <h3 class="mt-4 text-[14.5px] font-semibold leading-snug text-ink min-h-[2.6em]">Актюатор ТНВД (дозирующий блок) ISF2.8</h3>
+        <p class="mt-2"><span class="mono text-[11px] font-semibold px-1.5 py-0.5 bg-agro text-ink">АРТ. 0928400672</span></p>
+        <p class="mono text-[11px] text-ink/70 mt-1.5">ДВИГАТЕЛЬ ISF2.8 · <span class="font-semibold text-ink">ORIGINAL BOSCH</span></p>
+        <button type="button" class="mt-auto pt-4"><span class="block h-10 leading-10 text-center rounded-md bg-ink text-white text-[13px] font-bold hover:bg-inkdeep transition-colors w-full">Запросить цену</span></button>
+      </article>
+      <article class="ticket bg-white border border-dashed border-ink/35 rounded-md p-4 flex flex-col hover:shadow-[0_2px_0_#353030] transition-shadow">
+        <div class="aspect-square bg-white grid place-items-center overflow-hidden"><img src="assets/rotor.jpg" alt="Ротор масляного насоса внешний ISF2.8" class="w-[88%] h-[88%] object-contain" width="435" height="435" loading="lazy" decoding="async"></div>
+        <h3 class="mt-4 text-[14.5px] font-semibold leading-snug text-ink min-h-[2.6em]">Ротор масляного насоса внешний ISF2.8</h3>
+        <p class="mt-2"><span class="mono text-[11px] font-semibold px-1.5 py-0.5 bg-agro text-ink">АРТ. 5262898</span></p>
+        <p class="mono text-[11px] text-ink/70 mt-1.5">ДВИГАТЕЛЬ ISF2.8 · <span class="font-semibold text-ink">HAFFEN</span></p>
+        <button type="button" class="mt-auto pt-4"><span class="block h-10 leading-10 text-center rounded-md bg-ink text-white text-[13px] font-bold hover:bg-inkdeep transition-colors w-full">Запросить цену</span></button>
+      </article>
+      <article class="ticket bg-white border border-dashed border-ink/35 rounded-md p-4 flex flex-col hover:shadow-[0_2px_0_#353030] transition-shadow">
+        <div class="aspect-square bg-white grid place-items-center overflow-hidden"><img src="assets/pompa_isf38.jpg" alt="Насос водяной (помпа) ISF3.8" class="w-[88%] h-[88%] object-contain" width="435" height="435" loading="lazy" decoding="async"></div>
+        <h3 class="mt-4 text-[14.5px] font-semibold leading-snug text-ink min-h-[2.6em]">Насос водяной (помпа) ISF3.8</h3>
+        <p class="mt-2"><span class="mono text-[11px] font-semibold px-1.5 py-0.5 bg-agro text-ink">АРТ. 5263374</span></p>
+        <p class="mono text-[11px] text-ink/70 mt-1.5">ДВИГАТЕЛЬ ISF3.8 · <span class="font-semibold text-ink">HAFFEN</span></p>
+        <button type="button" class="mt-auto pt-4"><span class="block h-10 leading-10 text-center rounded-md bg-ink text-white text-[13px] font-bold hover:bg-inkdeep transition-colors w-full">Запросить цену</span></button>
+      </article>
+      <article class="ticket bg-white border border-dashed border-ink/35 rounded-md p-4 flex flex-col hover:shadow-[0_2px_0_#353030] transition-shadow">
+        <div class="aspect-square bg-white grid place-items-center overflow-hidden"><img src="assets/pompa_6ct.jpg" alt="Насос водяной (помпа) 6CT" class="w-[88%] h-[88%] object-contain" width="435" height="435" loading="lazy" decoding="async"></div>
+        <h3 class="mt-4 text-[14.5px] font-semibold leading-snug text-ink min-h-[2.6em]">Насос водяной (помпа) 6CT</h3>
+        <p class="mt-2"><span class="mono text-[11px] font-semibold px-1.5 py-0.5 bg-agro text-ink">АРТ. 3800974</span></p>
+        <p class="mono text-[11px] text-ink/70 mt-1.5">ДВИГАТЕЛЬ 6CT · <span class="font-semibold text-ink">HAFFEN</span></p>
+        <button type="button" class="mt-auto pt-4"><span class="block h-10 leading-10 text-center rounded-md bg-ink text-white text-[13px] font-bold hover:bg-inkdeep transition-colors w-full">Запросить цену</span></button>
+      </article>
+      <article class="ticket bg-white border border-dashed border-ink/35 rounded-md p-4 flex flex-col hover:shadow-[0_2px_0_#353030] transition-shadow">
+        <div class="aspect-square bg-white border border-dashed border-burgundy/40 grid place-items-center"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#77263B" stroke-width="1.6" opacity=".55"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2Z"/><circle cx="12" cy="13" r="4"/></svg><p class="mono text-[10px] tracking-[.15em] text-burgundy/60 mt-2">ФОТО-СЛОТ · 06</p></div>
+        <h3 class="mt-4 text-[14.5px] font-semibold leading-snug text-ink min-h-[2.6em]">Кольцо уплотнительное форсунки ISF3.8 / ISBe</h3>
+        <p class="mt-2"><span class="mono text-[11px] font-semibold px-1.5 py-0.5 bg-agro text-ink">АРТ. 5288373F</span></p>
+        <p class="mono text-[11px] text-ink/70 mt-1.5">ДВИГАТЕЛЬ ISF3.8 · <span class="font-semibold text-ink">CUMMINS</span></p>
+        <button type="button" class="mt-auto pt-4"><span class="block h-10 leading-10 text-center rounded-md bg-ink text-white text-[13px] font-bold hover:bg-inkdeep transition-colors w-full">Запросить цену</span></button>
+      </article>
+      <article class="ticket bg-white border border-dashed border-ink/35 rounded-md p-4 flex flex-col hover:shadow-[0_2px_0_#353030] transition-shadow">
+        <div class="aspect-square bg-white border border-dashed border-burgundy/40 grid place-items-center"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#77263B" stroke-width="1.6" opacity=".55"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2Z"/><circle cx="12" cy="13" r="4"/></svg><p class="mono text-[10px] tracking-[.15em] text-burgundy/60 mt-2">ФОТО-СЛОТ · 07</p></div>
+        <h3 class="mt-4 text-[14.5px] font-semibold leading-snug text-ink min-h-[2.6em]">Трубка масляная ТНВД WP10</h3>
+        <p class="mt-2"><span class="mono text-[11px] font-semibold px-1.5 py-0.5 bg-agro text-ink">АРТ. 612600070309</span></p>
+        <p class="mono text-[11px] text-ink/70 mt-1.5">ДВИГАТЕЛЬ WP10 · <span class="font-semibold text-ink">WEICHAI</span></p>
+        <button type="button" class="mt-auto pt-4"><span class="block h-10 leading-10 text-center rounded-md bg-ink text-white text-[13px] font-bold hover:bg-inkdeep transition-colors w-full">Запросить цену</span></button>
+      </article>
+      <article class="ticket bg-white border border-dashed border-ink/35 rounded-md p-4 flex flex-col hover:shadow-[0_2px_0_#353030] transition-shadow">
+        <div class="aspect-square bg-white grid place-items-center overflow-hidden"><img src="assets/shesternya.jpg" alt="Шестерня масляного насоса WD615 / WP10" class="w-[88%] h-[88%] object-contain" width="435" height="435" loading="lazy" decoding="async"></div>
+        <h3 class="mt-4 text-[14.5px] font-semibold leading-snug text-ink min-h-[2.6em]">Шестерня масляного насоса WD615 / WP10</h3>
+        <p class="mt-2"><span class="mono text-[11px] font-semibold px-1.5 py-0.5 bg-agro text-ink">АРТ. 612600070364</span></p>
+        <p class="mono text-[11px] text-ink/70 mt-1.5">ДВИГАТЕЛЬ WP10 · <span class="font-semibold text-ink">WEICHAI</span></p>
+        <button type="button" class="mt-auto pt-4"><span class="block h-10 leading-10 text-center rounded-md bg-ink text-white text-[13px] font-bold hover:bg-inkdeep transition-colors w-full">Запросить цену</span></button>
+      </article>
+    </div>
+  </section>
+
+  <!-- НЕ НАШЛИ АРТИКУЛ -->
+  <section class="bg-ink text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12 lg:py-14 flex flex-col md:flex-row md:items-center gap-6 md:gap-10">
+      <div class="flex-1">
+        <p class="mono text-[11px] tracking-[.2em] text-agro mb-2">НЕ НАШЛИ АРТИКУЛ?</p>
+        <h2 class="disp font-bold text-[22px] sm:text-[26px] leading-tight">Пришлите фото таблички или маркировку — подберём за вас</h2>
+        <p class="mt-2 text-white/70 text-[14px]">В каталоге 2000+ позиций: от болтов до ТНВД. Работаем со всеми двигателями китайской и американской техники.</p>
+      </div>
+      <div class="shrink-0 flex flex-col gap-3">
+        <a href="index_v1.html#zayavka" class="inline-flex items-center justify-center h-12 px-7 rounded-md bg-agro text-ink text-[14px] font-bold hover:bg-agrodeep transition-colors shadow-[0_2px_0_rgba(255,255,255,.25)]">Пришлите артикул</a>
+        <a href="tel:+78452390081" class="inline-flex items-center justify-center h-12 px-7 rounded-md border-[1.5px] border-white/40 text-white text-[14px] font-semibold hover:border-agro hover:text-agro transition-colors">8 (8452) 39-00-81</a>
+      </div>
+    </div>
+  </section>
+</main>
+</main>
+
+<!-- ФУТЕР -->
+<footer class="bg-inkdeep text-white/75">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 py-12 grid md:grid-cols-3 gap-10 text-[13.5px]">
+    <div>
+      <img src="assets/logo-footer-dark.svg" alt="С-Агротехника" class="h-10 w-auto" width="174" height="73">
+      <p class="mt-4 leading-relaxed">ООО «С-Агротехника»<br>ИНН 6449971753 · ОГРН 1046404905128<br>413100, Саратовская обл., г. Энгельс,<br>пр-кт Строителей, 58</p>
+      <p class="mt-2 text-white/60 text-[12px]">Склад: пос. Расково, тер. Северный, з/у 12 · ГК «Агротехника»</p>
+    </div>
+    <div>
+      <p class="mono text-[10.5px] tracking-[.18em] text-white/45 mb-3">КОНТАКТЫ</p>
+      <p class="leading-relaxed">Отдел продаж: <a href="tel:+78452390081" class="text-white hover:text-agro transition-colors">8 (8452) 39-00-81</a><br>
+      Мобильный: <a href="tel:+79272262254" class="text-white hover:text-agro transition-colors">8-927-226-22-54</a><br>
+      Снабжение: <a href="tel:+78453513516" class="text-white hover:text-agro transition-colors">8 (8453) 51-35-16</a><br>
+      <a href="mailto:saratov@c-agro.ru" class="text-white hover:text-agro transition-colors">saratov@c-agro.ru</a></p>
+      <p class="mt-3 text-white/50 text-[12px]">Саратов · Энгельс · Балаково · Балашов · Пугачёв</p>
+    </div>
+    <div>
+      <p class="mono text-[10.5px] tracking-[.18em] text-white/45 mb-3">ПАРТНЁРЫ</p>
+      <p class="leading-relaxed">Прямые поставки: HAFFEN · WEICHAI · BOSCH<br>Агент Росагролизинга (ГК «Агротехника Плюс»)</p>
+      <div class="mt-5 flex items-center gap-3">
+        <div class="barcode h-9 w-24 opacity-80"></div>
+        <span class="mono text-[10px] text-white/40">ДЕМО-МАКЕТ V1<br>НЕ ПУБЛИКАЦИЯ</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var btn = document.getElementById('menuBtn');
+  var menu = document.getElementById('mobileMenu');
+  function closeMenu() {
+    menu.classList.add('hidden');
+    btn.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
+  }
+  btn.addEventListener('click', function () {
+    var open = menu.classList.toggle('hidden') === false;
+    btn.setAttribute('aria-expanded', String(open));
+    document.body.style.overflow = open ? 'hidden' : '';
+  });
+  menu.addEventListener('click', function (e) {
+    if (e.target.closest('a')) closeMenu();
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') closeMenu();
+  });
+  var mq = window.matchMedia('(min-width: 768px)');
+  mq.addEventListener('change', function (ev) { if (ev.matches) closeMenu(); });
+})();
+</script>
+</body>
+</html>
