@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>С-Агротехника — техника и запчасти · демо-макет v3</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script>try { var t = localStorage.getItem('v3-theme'); if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t); } catch (e) {}</script>
+<style>
+/* ============================================================
+   ТЕМА v3 — палитра HeroUI (heroui.com, themes/default/variables.css)
+   Все цвета — только здесь. Дальше по коду: var() и color-mix().
+   ============================================================ */
+:root {
+  color-scheme: light;
+  --white: oklch(100% 0 0); --black: oklch(0% 0 0);
+  --snow: oklch(0.9911 0 0);            /* ≈#FBFBFB */
+  --eclipse: oklch(0.2103 0.0059 285.89); /* ≈#18181B */
+  --background: oklch(0.9702 0 0);      /* ≈#F7F7F8 */
+  --foreground: var(--eclipse);
+  --surface: var(--white); --overlay: var(--white);
+  --muted: oklch(0.5517 0.0138 285.94); /* ≈#6E7075 */
+  --default: oklch(94% 0.001 286.375); --default-foreground: var(--eclipse);
+  --accent: oklch(0.6204 0.195 253.83); --accent-foreground: var(--snow);
+  --success: oklch(0.7329 0.1935 150.81); --success-foreground: var(--eclipse);
+  --warning: oklch(0.7819 0.1585 72.33); --warning-foreground: var(--eclipse);
+  --danger: oklch(0.6532 0.2328 25.74); --danger-foreground: var(--snow);
+  --segment: var(--white);
+  --border: oklch(92% 0.004 286.32); --separator: oklch(92% 0.004 286.32);
+  --focus: var(--accent); --link: var(--foreground); --backdrop: rgba(0,0,0,0.5);
+  --surface-shadow: 0 2px 4px 0 rgba(0,0,0,0.04), 0 1px 2px 0 rgba(0,0,0,0.06), 0 0 1px 0 rgba(0,0,0,0.06);
+  --overlay-shadow: 0 4px 16px 0 rgba(24,24,27,0.08), 0 8px 24px 0 rgba(24,24,27,0.09);
+  --radius: 0.5rem;
+  --radius-lg: calc(var(--radius) * 1.5); /* поля: инпуты, карточки, панели */
+  /* Производные контраста AA (те же hue, затемнён/осветлён до ≥4.5:1) */
+  --accent-solid: oklch(0.50 0.21 253.83);  /* заливка CTA: контраст с --accent-foreground */
+  --accent-text: oklch(0.50 0.21 253.83);   /* мелкий акцентный текст/ссылки */
+  --muted-text: oklch(0.52 0.0138 285.94);  /* приглушённый текст: ≥4.5:1 на --background */
+}
+[data-theme="dark"] {
+  color-scheme: dark;
+  --background: oklch(12% 0.005 285.823); /* ≈#131316 */
+  --foreground: var(--snow);
+  --surface: oklch(0.2103 0.0059 285.89); /* ≈#18181B */
+  --overlay: oklch(0.22 0.0059 285.89);
+  --muted: oklch(70.5% 0.015 286.067);    /* ≈#A1A1AA */
+  --default: oklch(27.4% 0.006 286.033); --default-foreground: var(--snow);
+  --warning: oklch(0.8203 0.1388 76.34);
+  --danger: oklch(0.594 0.1967 24.63);
+  --segment: oklch(0.3964 0.01 285.93);   /* ≈#2E2E33 */
+  --border: oklch(22% 0.006 286.033); --separator: oklch(22% 0.006 286.033);
+  --backdrop: rgba(0,0,0,0.6);
+  --surface-shadow: 0 0 #0000; --overlay-shadow: 0 0 #0000; /* в dark теней нет */
+  --accent-solid: oklch(0.52 0.20 253.83);
+  --accent-text: oklch(0.72 0.14 253.83);
+  --muted-text: var(--muted);
+}
+
+/* ============ БАЗА ============ */
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 16px; line-height: 1.6;
+  background: var(--background); color: var(--foreground);
+  overflow-x: clip;
+  transition: background-color .2s ease, color .2s ease;
+}
+img { max-width: 100%; display: block; }
+a { color: var(--link); cursor: pointer; }
+button { font: inherit; cursor: pointer; }
+h1, h2, h3 { margin: 0; font-weight: 800; line-height: 1.15; letter-spacing: -0.02em; }
+p { margin: 0; }
+ul { margin: 0; padding: 0; list-style: none; }
+section[id] { scroll-margin-top: 88px; }
+::selection { background: var(--accent); color: var(--accent-foreground); }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.skip { position: absolute; left: -9999px; }
+.skip:focus { left: 12px; top: 12px; z-index: 100; background: var(--surface); color: var(--foreground); padding: 8px 16px; border: 1px solid var(--focus); border-radius: var(--radius); font-weight: 600; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
+}
+
+/* ============ УТИЛИТЫ ============ */
+.container { max-width: 1280px; margin-inline: auto; padding-inline: clamp(16px, 4vw, 32px); }
+@media (min-width: 1440px) { .container { padding-inline: 48px; } }
+.eyebrow { margin: 0 0 8px; font-size: 11px; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--accent-text); }
+.h2 { font-size: clamp(28px, 3.4vw, 36px); font-weight: 800; }
+.num { font-variant-numeric: tabular-nums; letter-spacing: .02em; }
+.text-link { color: var(--accent-text); font-weight: 500; text-decoration: underline; text-underline-offset: 4px; text-decoration-color: color-mix(in oklab, var(--accent) 35%, transparent); transition: text-decoration-color .2s; }
+.text-link:hover { text-decoration-color: currentColor; }
+
+/* ============ КНОПКИ ============ */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  height: 48px; padding: 0 28px; border-radius: 999px; border: 1.5px solid transparent;
+  font-size: 14px; font-weight: 600; text-decoration: none; white-space: nowrap;
+  transition: background-color .2s, color .2s, border-color .2s;
+}
+.btn-sm { height: 40px; padding: 0 22px; font-size: 13px; }
+.btn-primary { background: var(--accent-solid); color: var(--accent-foreground); }
+.btn-primary:hover { background: color-mix(in oklab, var(--accent-solid) 90%, var(--accent-foreground) 10%); }
+.btn-outline { border-color: var(--border); color: var(--foreground); background: transparent; }
+.btn-outline:hover { border-color: var(--accent); color: var(--accent-text); background: color-mix(in oklab, var(--accent) 15%, transparent); }
+.btn-ghost-light { border-color: color-mix(in oklab, var(--snow) 40%, transparent); color: var(--snow); background: transparent; }
+.btn-ghost-light:hover { border-color: var(--snow); background: color-mix(in oklab, var(--snow) 10%, transparent); }
+
+/* ============ ЧИПЫ / БЕЙДЖИ / СТАТУСЫ ============ */
+.chips { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 16px; font-size: 12px; }
+.chips-label { font-weight: 600; letter-spacing: .06em; color: var(--muted-text); margin-right: 4px; }
+.chip {
+  display: inline-flex; align-items: center; height: 30px; padding: 0 14px;
+  border-radius: 999px; border: 1px solid var(--border); background: var(--surface);
+  color: color-mix(in oklab, var(--foreground) 75%, var(--background));
+  font-size: 12px; font-weight: 600; text-decoration: none;
+  transition: border-color .2s, color .2s, background-color .2s;
+}
+.chip:hover { border-color: var(--accent); color: var(--accent-text); }
+.chip.is-active { background: var(--accent-solid); border-color: var(--accent-solid); color: var(--accent-foreground); }
+.badge-warning {
+  display: inline-block; padding: 4px 10px; border-radius: var(--radius);
+  background: var(--warning); color: var(--warning-foreground);
+  font-size: 10.5px; font-weight: 700; letter-spacing: .06em;
+}
+.dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.dot--success { background: var(--success); }
+
+/* ============ КАРТОЧКИ ============ */
+.card {
+  position: relative; display: flex; flex-direction: column; overflow: hidden;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); box-shadow: var(--surface-shadow);
+  transition: border-color .3s, background-color .2s;
+}
+.card:hover { border-color: color-mix(in oklab, var(--accent) 45%, var(--border)); }
+.card-badge { position: absolute; top: 12px; left: 12px; z-index: 1; }
+.card-media { aspect-ratio: 4 / 3; overflow: hidden; background: var(--default); }
+.card-media img { width: 100%; height: 100%; object-fit: cover; transition: transform .3s; }
+.card:hover .card-media img { transform: scale(1.02); }
+/* Точечный тон пересвеченного фото (ассет клиента не заменяем) */
+.card-media img.img-bright { filter: brightness(.97) contrast(1.05) saturate(1.05); }
+.card-body { display: flex; flex-direction: column; gap: 6px; padding: 20px; flex: 1; }
+.card-title { font-size: 17px; font-weight: 700; letter-spacing: -0.01em; }
+.card-text { font-size: 13px; line-height: 1.55; color: var(--muted); }
+.card-link {
+  margin-top: auto; padding-top: 8px; align-self: flex-start;
+  font-size: 13px; font-weight: 600; color: var(--accent-text);
+  text-decoration: underline; text-underline-offset: 4px;
+  text-decoration-color: color-mix(in oklab, var(--accent) 35%, transparent);
+  transition: text-decoration-color .2s;
+}
+.card-link:hover { text-decoration-color: currentColor; }
+.product-code { font-size: 12.5px; font-weight: 700; letter-spacing: .05em; font-variant-numeric: tabular-nums; color: var(--accent-text); }
+
+/* ============ ТОПБАР ============ */
+.topbar { background: var(--eclipse); color: color-mix(in oklab, var(--snow) 75%, transparent); font-size: 13px; }
+.topbar-inner { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 4px 16px; min-height: 36px; padding-block: 6px; }
+.topbar-links { display: flex; align-items: center; gap: 20px; }
+.topbar a { display: inline-flex; align-items: center; gap: 6px; color: inherit; text-decoration: none; transition: color .2s; }
+.topbar a:hover { color: var(--snow); }
+@media (max-width: 900px) { .topbar { display: none; } }
+
+/* ============ ШАПКА ============ */
+.site-header {
+  position: sticky; top: 0; z-index: 50;
+  background: color-mix(in oklab, var(--surface) 92%, transparent);
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+}
+.header-inner { display: flex; align-items: center; gap: clamp(12px, 2vw, 24px); height: 76px; }
+.logo { display: flex; flex-shrink: 0; }
+.logo img { height: 40px; width: auto; }
+.logo-dark { display: none; }
+[data-theme="dark"] .logo-light { display: none; }
+[data-theme="dark"] .logo-dark { display: block; }
+.main-nav { display: none; align-items: center; gap: 28px; font-size: 14px; font-weight: 500; }
+@media (min-width: 1181px) { .main-nav { display: flex; } }
+.main-nav a { color: var(--muted); text-decoration: none; transition: color .2s; }
+.main-nav a:hover { color: var(--accent-text); }
+.main-nav a.is-active { color: var(--accent-text); font-weight: 600; }
+.header-phone { display: none; margin-left: auto; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: var(--foreground); text-decoration: none; transition: color .2s; }
+.header-phone:hover { color: var(--accent-text); }
+@media (min-width: 640px) { .header-phone { display: inline-flex; } }
+.header-cta { display: none; flex-shrink: 0; }
+@media (min-width: 900px) { .header-cta { display: inline-flex; } }
+.theme-toggle, .menu-btn {
+  display: grid; place-items: center; width: 40px; height: 40px; flex-shrink: 0;
+  border: 1px solid var(--border); border-radius: var(--radius);
+  background: transparent; color: var(--foreground);
+  transition: background-color .2s, border-color .2s;
+}
+.theme-toggle:hover, .menu-btn:hover { background: var(--default); border-color: var(--muted); }
+.theme-toggle .i-sun { display: none; }
+[data-theme="dark"] .theme-toggle .i-sun { display: block; }
+[data-theme="dark"] .theme-toggle .i-moon { display: none; }
+.menu-btn { margin-left: 0; }
+@media (min-width: 1181px) { .menu-btn { display: none; } }
+@media (max-width: 639px) { .menu-btn { margin-left: auto; } }
+.menu-btn .bars { display: block; width: 20px; }
+.menu-btn .bars span { display: block; width: 20px; height: 2px; border-radius: 2px; background: currentColor; margin: 2.5px 0; }
+.mobile-menu { display: none; border-top: 1px solid var(--border); background: var(--surface); }
+.mobile-menu.open { display: block; }
+.mobile-menu nav { padding: 12px 16px 16px; }
+.mobile-menu a:not(.btn) { display: block; padding: 12px 0; border-bottom: 1px solid var(--border); font-size: 15px; font-weight: 500; color: var(--foreground); text-decoration: none; }
+.mobile-menu a:not(.btn):hover { color: var(--accent-text); }
+.mobile-menu a.is-active { color: var(--accent-text); font-weight: 600; }
+.mobile-menu .btn { width: 100%; margin-top: 12px; }
+
+/* ============ HERO ============ */
+.hero { position: relative; overflow: hidden; background: var(--eclipse); color: var(--snow); }
+.hero-media { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: saturate(.92) contrast(.98); }
+.hero-overlay {
+  position: absolute; inset: 0;
+  /* Стопы под зону подписи: на 901–1440+ текст лежит левее ~68% ширины → плато 70% eclipse до 75%.
+     Worst-case (фото = чистый белый): 70% eclipse → 6.5:1 с --snow (≥4.5) ✓ */
+  background: linear-gradient(90deg,
+    color-mix(in oklab, var(--eclipse) 90%, transparent) 0%,
+    color-mix(in oklab, var(--eclipse) 70%, transparent) 75%,
+    color-mix(in oklab, var(--eclipse) 20%, transparent) 100%);
+}
+/* ≤900px: подпись доходит до правого края → скрим вертикальный, плотный по всей ширине
+   (65% eclipse поверх белого → 5.5:1) */
+@media (max-width: 900px) {
+  .hero-overlay {
+    background: linear-gradient(180deg,
+      color-mix(in oklab, var(--eclipse) 65%, transparent),
+      color-mix(in oklab, var(--eclipse) 88%, transparent));
+  }
+}
+.glow {
+  position: absolute; width: 680px; height: 680px; border-radius: 50%;
+  background: radial-gradient(closest-side, var(--accent), transparent 70%);
+  opacity: 0; pointer-events: none;
+}
+[data-theme="dark"] .glow { opacity: .12; } /* один сдержанный radial-glow, только dark */
+.hero .glow { top: -240px; right: -160px; }
+.hero-content { position: relative; z-index: 1; display: flex; align-items: center; min-height: 560px; padding-block: clamp(64px, 9vw, 112px); }
+.hero-kicker { margin: 0 0 16px; font-size: 11px; font-weight: 600; letter-spacing: .22em; color: color-mix(in oklab, var(--snow) 65%, transparent); }
+.hero h1 { font-size: clamp(32px, 5vw, 54px); line-height: 1.1; max-width: 640px; }
+.hero-lead { margin-top: 20px; font-size: clamp(16px, 1.2vw, 17px); line-height: 1.65; color: color-mix(in oklab, var(--snow) 82%, transparent); max-width: 576px; }
+.hero-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+.hero-note { display: flex; align-items: center; gap: 10px; margin-top: 24px; font-size: 14px; color: color-mix(in oklab, var(--snow) 88%, transparent); }
+@media (max-width: 390px) { .hero-content { min-height: 480px; } .hero-actions .btn { width: 100%; } }
+
+/* ============ ПОЛОСА ДОВЕРИЯ ============ */
+.trust { border-bottom: 1px solid var(--border); }
+.trust-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px 16px; padding-block: 32px; }
+@media (min-width: 760px) { .trust-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+@media (min-width: 760px) { .trust-label { min-height: 2.8em; } } /* базлайн ряда: длинная подпись «5 городов…» в 2 строки */
+@media (max-width: 500px) { .trust-grid { grid-template-columns: 1fr; } } /* бейдж ~192px не влезает в 2 колонки на 390 */
+.trust-num { font-size: clamp(26px, 3vw, 30px); font-weight: 800; letter-spacing: -0.02em; font-variant-numeric: tabular-nums; }
+.trust-label { margin-top: 4px; font-size: 13px; color: var(--muted-text); }
+.trust-badge-wrap { display: flex; align-items: center; }
+.trust-badge {
+  display: inline-flex; align-items: center; gap: 10px; padding: 10px 20px;
+  border: 1px solid var(--border); border-radius: 999px; background: var(--surface);
+  font-size: 11px; font-weight: 600; letter-spacing: .14em; color: var(--muted);
+}
+.trust-badge .dot { width: 8px; height: 8px; background: var(--accent); }
+
+/* ============ СЕКЦИИ ============ */
+.section { padding-block: clamp(56px, 8vw, 96px); }
+.section-alt { background: var(--surface); border-block: 1px solid var(--border); }
+.section-head { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px; }
+.section-link { font-size: 14px; font-weight: 600; flex-shrink: 0; }
+.section-lead { margin-top: 16px; font-size: 15px; line-height: 1.65; color: var(--muted); max-width: 640px; }
+.section-lead strong { color: var(--foreground); font-weight: 600; }
+.mt-grid { margin-top: 40px; }
+.grid { display: grid; gap: 24px; grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 620px) {
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (min-width: 1181px) {
+  .grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+/* ============ ПОИСК ============ */
+.search {
+  display: flex; align-items: center; gap: 12px; width: 100%; max-width: 640px;
+  height: 52px; margin-top: 32px; padding-left: 20px; padding-right: 6px;
+  background: var(--background); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); transition: border-color .2s;
+}
+.search:focus-within { border-color: var(--focus); }
+.search-icon { color: var(--muted); flex-shrink: 0; }
+.search input { flex: 1; min-width: 0; height: 100%; border: 0; background: transparent; font: inherit; font-size: 14px; color: var(--foreground); outline: none; }
+.search input::placeholder { color: var(--muted-text); }
+
+/* ============ МИНИ-КАРТОЧКИ ЗАПЧАСТЕЙ ============ */
+.mini-card {
+  display: flex; align-items: center; gap: 16px; padding: 20px;
+  background: var(--background); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); box-shadow: var(--surface-shadow);
+  transition: border-color .3s;
+}
+.mini-card:hover { border-color: color-mix(in oklab, var(--accent) 45%, var(--border)); }
+.mini-thumb { width: 80px; height: 80px; flex-shrink: 0; display: grid; place-items: center; overflow: hidden; background: var(--white); border: 1px solid var(--border); border-radius: var(--radius); }
+.mini-thumb img { width: 85%; height: 85%; object-fit: contain; }
+.mini-info { min-width: 0; display: flex; flex-direction: column; align-items: flex-start; }
+.mini-title { margin-top: 2px; font-size: 14px; font-weight: 600; line-height: 1.35; letter-spacing: 0; }
+.mini-info .card-link { margin-top: 6px; padding-top: 0; }
+
+/* ============ ОТЗЫВЫ ============ */
+.quote { margin: 0; padding: 28px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); box-shadow: var(--surface-shadow); }
+.quote-mark { color: var(--accent); opacity: .35; }
+.quote blockquote { margin: 16px 0 0; font-size: 15.5px; line-height: 1.65; color: var(--foreground); }
+.quote figcaption { margin-top: 20px; font-size: 13px; color: var(--muted); }
+.quote figcaption b { color: var(--foreground); font-weight: 600; }
+.reviews-note { margin-top: 24px; font-size: 13px; color: var(--muted-text); }
+
+/* ============ CTA-ПАНЕЛЬ (главная) ============ */
+.cta-wrap { padding-bottom: clamp(56px, 8vw, 96px); }
+.cta-panel {
+  display: flex; flex-direction: column; gap: 32px;
+  padding: clamp(32px, 5vw, 64px);
+  background: var(--eclipse); color: var(--snow);
+  border: 1px solid var(--border); border-radius: var(--radius-lg);
+}
+@media (min-width: 900px) { .cta-panel { flex-direction: row; align-items: center; justify-content: space-between; } }
+.cta-panel h2 { color: var(--snow); font-size: clamp(26px, 3vw, 32px); max-width: 520px; text-wrap: balance; }
+.cta-text { margin-top: 12px; font-size: 14.5px; line-height: 1.6; color: color-mix(in oklab, var(--snow) 65%, transparent); }
+.cta-actions { display: flex; flex-direction: column; gap: 12px; flex-shrink: 0; }
+@media (min-width: 560px) { .cta-actions { flex-direction: row; } }
+
+/* ============ ФУТЕР ============ */
+.footer { background: var(--eclipse); color: color-mix(in oklab, var(--snow) 70%, transparent); }
+.footer a { color: inherit; text-decoration: none; transition: color .2s; }
+.footer a:hover { color: var(--snow); }
+.footer-grid { display: grid; gap: 40px; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); padding-block: 48px; }
+.footer-logo { height: 44px; width: auto; }
+.footer-about { margin-top: 16px; font-size: 13px; line-height: 1.65; }
+.footer-heading { margin: 0 0 16px; font-size: 11px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: color-mix(in oklab, var(--snow) 60%, transparent); }
+.footer ul { display: grid; gap: 10px; font-size: 14px; }
+.footer-bottom { border-top: 1px solid color-mix(in oklab, var(--snow) 10%, transparent); }
+.footer-bottom-inner { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; padding-block: 16px; font-size: 11.5px; color: color-mix(in oklab, var(--snow) 60%, transparent); }
+</style>
+</head>
+<body>
+<a href="#main" class="skip">К содержанию</a>
+
+<!-- ТОПБАР: гео + мессенджеры (его каналы) -->
+<div class="topbar">
+  <div class="container topbar-inner">
+    <span>Саратов · Энгельс · Балаково · Балашов · Пугачёв — склад пос. Расково</span>
+    <span class="topbar-links">
+      <a href="https://t.me/atehnikaplus" target="_blank" rel="noopener">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21.9 4.6 19 19.3c-.2 1-.8 1.2-1.6.8l-4.5-3.3-2.2 2.1c-.2.2-.4.4-.9.4l.3-4.6L18.6 7c.4-.3-.1-.5-.6-.2L7.7 13.2l-4.4-1.4c-1-.3-1-1 .2-1.4l17-6.6c.8-.3 1.5.2 1.4.4Z"/></svg>
+        Telegram
+      </a>
+      <a href="https://api.whatsapp.com/send/?phone=+79271488880" target="_blank" rel="noopener">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2Zm0 18.2c-1.6 0-3.2-.4-4.5-1.2l-.3-.2-3 .8.8-3-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.6-6.1c-.3-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.3-.7.8-.8 1-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.4-3c-.3-.4 0-.5.1-.7l.4-.5c.1-.1.2-.3.3-.4.1-.2 0-.3 0-.5L9.5 7.9c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 1.9 3 4.7 4.2 1.8.7 2.5.8 3.4.7.5-.1 1.6-.7 1.8-1.3.2-.6.2-1.2.2-1.3l-.4-.3Z"/></svg>
+        WhatsApp
+      </a>
+    </span>
+  </div>
+</div>
+
+<!-- ШАПКА -->
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="index_v3.html" class="logo" aria-label="С-Агротехника — на главную">
+      <img src="assets/logo-footer.svg" alt="С-Агротехника" class="logo-light" width="174" height="73" fetchpriority="high">
+      <img src="assets/logo-footer-dark.svg" alt="" class="logo-dark" width="174" height="73" aria-hidden="true">
+    </a>
+    <nav class="main-nav" aria-label="Основное меню">
+      <a href="#tech" class="is-active" aria-current="true">Техника</a>
+      <a href="catalog_v3.html">Запчасти</a>
+      <a href="#reviews">Отзывы</a>
+      <a href="#contacts">Контакты</a>
+    </nav>
+    <a href="tel:+78452390081" class="header-phone" aria-label="Позвонить">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 2 .7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.9.5 2.8.6a2 2 0 0 1 1.7 2Z"/></svg>
+      <span>8 (8452) 39-00-81</span>
+    </a>
+    <a href="https://api.whatsapp.com/send/?phone=+79271488880" target="_blank" rel="noopener" class="btn btn-outline btn-sm header-cta">Запросить цену</a>
+    <button id="themeToggle" class="theme-toggle" type="button" aria-label="Переключить цветовую тему">
+      <svg class="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+      <svg class="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+    </button>
+    <button id="menuBtn" class="menu-btn" type="button" aria-label="Меню" aria-expanded="false" aria-controls="mobileMenu">
+      <span class="bars" aria-hidden="true"><span></span><span></span><span></span></span>
+    </button>
+  </div>
+  <!-- мобильное меню -->
+  <div id="mobileMenu" class="mobile-menu">
+    <nav aria-label="Мобильное меню">
+      <a href="#tech" class="menu-link is-active">Техника</a>
+      <a href="catalog_v3.html" class="menu-link">Запчасти</a>
+      <a href="#reviews" class="menu-link">Отзывы</a>
+      <a href="#contacts" class="menu-link">Контакты</a>
+      <a href="tel:+78452390081" class="menu-link num">8 (8452) 39-00-81</a>
+      <a href="https://api.whatsapp.com/send/?phone=+79271488880" target="_blank" rel="noopener" class="menu-link btn btn-primary">Запросить цену в WhatsApp</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+<!-- HERO: его витрина = фото техники, полноширинно -->
+<section class="hero">
+  <img src="assets/shumaher.jpg" alt="Жатка Шумахер в поле" class="hero-media" width="940" height="510" fetchpriority="high">
+  <div class="hero-overlay" aria-hidden="true"></div>
+  <div class="glow" aria-hidden="true"></div>
+  <div class="container hero-content">
+    <div>
+      <p class="hero-kicker">САРАТОВСКАЯ ОБЛАСТЬ · С 2004 ГОДА</p>
+      <h1>Техника для поля.<br>Запчасти для техники.</h1>
+      <p class="hero-lead">Продажа, сервис и оригинальные запчасти HAFFEN · WEICHAI · BOSCH. Отсрочка оплаты для хозяйств — до конца сезона.</p>
+      <div class="hero-actions">
+        <a href="#tech" class="btn btn-primary">Подобрать технику</a>
+        <a href="catalog_v3.html" class="btn btn-ghost-light">Запчасти по артикулу</a>
+      </div>
+      <p class="hero-note"><span class="dot dot--success" aria-hidden="true"></span>Отправка со склада за 1 день по Саратовской области</p>
+    </div>
+  </div>
+</section>
+
+<!-- ПОЛОСА ДОВЕРИЯ: тонкая -->
+<section class="trust" aria-label="Ключевые факты">
+  <div class="container trust-grid">
+    <div>
+      <p class="trust-num">22</p>
+      <p class="trust-label">года на рынке агроснабжения</p>
+    </div>
+    <div>
+      <p class="trust-num">2 000+</p>
+      <p class="trust-label">артикулов запчастей в наличии и под заказ</p>
+    </div>
+    <div>
+      <p class="trust-num">5</p>
+      <p class="trust-label">городов присутствия в Саратовской области</p>
+    </div>
+    <div class="trust-badge-wrap">
+      <span class="trust-badge"><span class="dot" aria-hidden="true"></span>АГЕНТ РОСАГРОЛИЗИНГА</span>
+    </div>
+  </div>
+</section>
+
+<!-- ВИТРИНА ТЕХНИКИ (его гордость) -->
+<section id="tech" class="section">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">ТЕХНИКА</p>
+        <h2 class="h2">Витрина сезона</h2>
+      </div>
+      <a href="catalog_v3.html" class="text-link section-link">Все предложения →</a>
+    </div>
+
+    <div class="grid grid-4 mt-grid">
+      <!-- Посевная -->
+      <article class="card">
+        <div class="card-media">
+          <img src="assets/posev.jpg" alt="Посевная техника" width="380" height="227" loading="lazy" decoding="async">
+        </div>
+        <div class="card-body">
+          <h3 class="card-title">Посевная техника</h3>
+          <p class="card-text">Сеялки и комплексы для точного сева</p>
+          <a href="catalog_v3.html" class="card-link">Смотреть →</a>
+        </div>
+      </article>
+
+      <!-- Почвообработка + АКЦИЯ (его язык: 30/70) -->
+      <article class="card">
+        <span class="badge-warning card-badge">АКЦИЯ · 30/70</span>
+        <div class="card-media">
+          <img src="assets/pochvo.jpg" alt="Почвообрабатывающая техника" width="380" height="227" loading="lazy" decoding="async">
+        </div>
+        <div class="card-body">
+          <h3 class="card-title">Почвообработка</h3>
+          <p class="card-text">Плуги, культиваторы, бороны. Предоплата 30% — отсрочка до сезона</p>
+          <a href="catalog_v3.html" class="card-link">Условия →</a>
+        </div>
+      </article>
+
+      <!-- Кормозаготовка -->
+      <article class="card">
+        <div class="card-media">
+          <img src="assets/kormo.jpg" alt="Кормозаготовительная техника" width="380" height="227" loading="lazy" decoding="async">
+        </div>
+        <div class="card-body">
+          <h3 class="card-title">Кормозаготовка</h3>
+          <p class="card-text">Косилки, пресс-подборщики, кормораздатчики</p>
+          <a href="catalog_v3.html" class="card-link">Смотреть →</a>
+        </div>
+      </article>
+
+      <!-- Жатки Шумахер -->
+      <article class="card">
+        <div class="card-media">
+          <img src="assets/tech2707.jpg" alt="Зернометательная техника" class="img-bright" width="380" height="227" loading="lazy" decoding="async">
+        </div>
+        <div class="card-body">
+          <h3 class="card-title">Жатки и зерно</h3>
+          <p class="card-text">Жатки Шумахер, зерномёты и очистка</p>
+          <a href="catalog_v3.html" class="card-link">Смотреть →</a>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ЗАПЧАСТИ: спокойная секция с поиском -->
+<section id="parts" class="section section-alt">
+  <div class="container">
+    <p class="eyebrow">ЗАПЧАСТИ</p>
+    <h2 class="h2">Оригинальные запчасти по артикулу</h2>
+    <p class="section-lead">
+      ТНВД, помпы, актуаторы, шестерни для ISF2.8 · ISF3.8 · 6CT · WP10.
+      <strong>Склад — отправка за 1 день</strong>, остальное под заказ.
+    </p>
+
+    <!-- Тонкий поиск -->
+    <form action="catalog_v3.html" method="get" class="search">
+      <label for="q" class="sr-only">Поиск по артикулу или модели</label>
+      <svg class="search-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      <input id="q" name="q" type="search" inputmode="search" autocomplete="off" placeholder="0445020119 · 5263374 · ISF3.8">
+      <button type="submit" class="btn btn-primary btn-sm">Найти</button>
+    </form>
+    <div class="chips">
+      <span class="chips-label">ДВИГАТЕЛЬ:</span>
+      <a href="catalog_v3.html" class="chip is-active" aria-current="true">Все</a>
+      <a href="catalog_v3.html" class="chip">ISF2.8</a>
+      <a href="catalog_v3.html" class="chip">ISF3.8</a>
+      <a href="catalog_v3.html" class="chip">6CT</a>
+      <a href="catalog_v3.html" class="chip">WP10</a>
+    </div>
+
+    <!-- 3 мини-карточки -->
+    <div class="grid grid-3 mt-grid">
+      <article class="mini-card">
+        <div class="mini-thumb">
+          <img src="assets/tnvd.jpg" alt="ТНВД ISF2.8" width="435" height="435" loading="lazy" decoding="async">
+        </div>
+        <div class="mini-info">
+          <p class="product-code">0445020119</p>
+          <h3 class="mini-title">ТНВД ISF2.8 HAFFEN</h3>
+          <a href="catalog_v3.html" class="card-link">Запросить цену →</a>
+        </div>
+      </article>
+      <article class="mini-card">
+        <div class="mini-thumb">
+          <img src="assets/pompa_isf38.jpg" alt="Насос водяной ISF3.8" width="435" height="435" loading="lazy" decoding="async">
+        </div>
+        <div class="mini-info">
+          <p class="product-code">5263374</p>
+          <h3 class="mini-title">Насос водяной ISF3.8</h3>
+          <a href="catalog_v3.html" class="card-link">Запросить цену →</a>
+        </div>
+      </article>
+      <article class="mini-card">
+        <div class="mini-thumb">
+          <img src="assets/shesternya.jpg" alt="Шестерня масляного насоса WP10" width="435" height="435" loading="lazy" decoding="async">
+        </div>
+        <div class="mini-info">
+          <p class="product-code">612600070364</p>
+          <h3 class="mini-title">Шестерня WP10 WEICHAI</h3>
+          <a href="catalog_v3.html" class="card-link">Запросить цену →</a>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ОТЗЫВЫ КФХ (его метод доверия) -->
+<section id="reviews" class="section">
+  <div class="container">
+    <p class="eyebrow">ОТЗЫВЫ</p>
+    <h2 class="h2">Хозяйства о технике</h2>
+    <div class="grid grid-2 mt-grid">
+      <figure class="quote">
+        <svg class="quote-mark" width="26" height="26" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M14 17h5V9h-4V4H8v6h4v7Zm-9 0h4v-4H7v-3H3v7h2Z"/></svg>
+        <blockquote>
+          «Взял культиватор по схеме 30/70 — отсрочка выручила перед сезоном.
+          Техника зашла в почву как по маслу, сервис приехал наладить в тот же месяц».
+        </blockquote>
+        <figcaption>
+          <b>Глава КФХ Саяпин С.А.</b> · Романовский район
+        </figcaption>
+      </figure>
+      <figure class="quote">
+        <svg class="quote-mark" width="26" height="26" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M14 17h5V9h-4V4H8v6h4v7Zm-9 0h4v-4H7v-3H3v7h2Z"/></svg>
+        <blockquote>
+          «Запчасти подбирают по фото таблички двигателя — присылал в WhatsApp,
+          на следующий день счёт, через день забрал со склада в Расково».
+        </blockquote>
+        <figcaption>
+          <b>Глава КФХ Дементьев Д.А.</b> · Базарно-Карабулакский район
+        </figcaption>
+      </figure>
+    </div>
+    <p class="reviews-note">Полные видео-обзоры и отзывы — в наших группах
+      <a href="https://vk.com/agrotehnikaplus" target="_blank" rel="noopener" class="text-link">ВКонтакте</a> и
+      <a href="https://ok.ru/group/70000034115083" target="_blank" rel="noopener" class="text-link">Одноклассниках</a>
+    </p>
+  </div>
+</section>
+
+<!-- CTA: WhatsApp (его канал) -->
+<section class="cta-wrap">
+  <div class="container">
+    <div class="cta-panel">
+      <div>
+        <h2>Пришлите артикул или вопрос — ответим в течение часа</h2>
+        <p class="cta-text">Менеджер на связи в рабочие дни 8:00–17:00. Фото таблички двигателя достаточно для подбора.</p>
+      </div>
+      <div class="cta-actions">
+        <a href="https://api.whatsapp.com/send/?phone=+79271488880" target="_blank" rel="noopener" class="btn btn-primary">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15L2 22l5.2-1.4A10 10 0 1 0 12 2Zm0 18.2c-1.6 0-3.2-.4-4.5-1.2l-.3-.2-3 .8.8-3-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.6-6.1c-.3-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.3-.7.8-.8 1-.1.2-.3.2-.5-.1a6.7 6.7 0 0 1-3.4-3c-.3-.4 0-.5.1-.7l.4-.5c.1-.1.2-.3.3-.4.1-.2 0-.3 0-.5L9.5 7.9c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.3.3-1 1-1 2.4s1 2.8 1.2 3c.1.2 1.9 3 4.7 4.2 1.8.7 2.5.8 3.4.7.5-.1 1.6-.7 1.8-1.3.2-.6.2-1.2.2-1.3l-.4-.3Z"/></svg>
+          Написать в WhatsApp
+        </a>
+        <a href="tel:+78452390081" class="btn btn-ghost-light">Позвонить</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ФУТЕР -->
+<footer id="contacts" class="footer">
+  <div class="container footer-grid">
+    <div>
+      <img src="assets/logo-footer-dark.svg" alt="С-Агротехника" class="footer-logo" width="174" height="73" loading="lazy" decoding="async">
+      <p class="footer-about">Запчасти и техника для сельского хозяйства. Склад: пос. Расково, тер. Северный, з/у 12.</p>
+    </div>
+    <div>
+      <p class="footer-heading">КАТАЛОГ</p>
+      <ul>
+        <li><a href="#tech">Техника</a></li>
+        <li><a href="catalog_v3.html">Запчасти</a></li>
+        <li><a href="#reviews">Отзывы</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="footer-heading">ГОРОДА</p>
+      <ul>
+        <li>Саратов — 8 (8452) 39-00-81</li>
+        <li>Энгельс · Балаково · Балашов · Пугачёв</li>
+        <li><a href="mailto:saratov@c-agro.ru">saratov@c-agro.ru</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="footer-heading">МЫ В СЕТИ</p>
+      <ul>
+        <li><a href="https://vk.com/agrotehnikaplus" target="_blank" rel="noopener">ВКонтакте</a></li>
+        <li><a href="https://ok.ru/group/70000034115083" target="_blank" rel="noopener">Одноклассники</a></li>
+        <li><a href="https://t.me/atehnikaplus" target="_blank" rel="noopener">Telegram</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <div class="container footer-bottom-inner">
+      <span>ООО «С-Агротехника» · ИНН 6449971753 · ОГРН 1046404905128 · Энгельс, пр-кт Строителей, 58</span>
+      <span>ДЕМО-МАКЕТ V3 · НЕ ПУБЛИКАЦИЯ</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  /* Тема: старт light, выбор в localStorage('v3-theme') */
+  var root = document.documentElement;
+  var toggle = document.getElementById('themeToggle');
+  toggle.addEventListener('click', function () {
+    var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    try { localStorage.setItem('v3-theme', next); } catch (e) {}
+  });
+  /* Мобильное меню */
+  var btn = document.getElementById('menuBtn');
+  var menu = document.getElementById('mobileMenu');
+  function closeMenu() {
+    menu.classList.remove('open');
+    btn.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
+  }
+  btn.addEventListener('click', function () {
+    var open = menu.classList.toggle('open');
+    btn.setAttribute('aria-expanded', String(open));
+    document.body.style.overflow = open ? 'hidden' : '';
+  });
+  menu.querySelectorAll('a').forEach(function (a) { a.addEventListener('click', closeMenu); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeMenu(); });
+  matchMedia('(min-width: 1181px)').addEventListener('change', function (m) { if (m.matches) closeMenu(); });
+})();
+</script>
+</body>
+</html>

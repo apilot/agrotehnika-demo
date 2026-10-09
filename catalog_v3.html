@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Запчасти по артикулу — каталог · демо v3</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script>try { var t = localStorage.getItem('v3-theme'); if (t === 'dark' || t === 'light') document.documentElement.setAttribute('data-theme', t); } catch (e) {}</script>
+<style>
+/* ============================================================
+   ТЕМА v3 — палитра HeroUI (heroui.com, themes/default/variables.css)
+   Все цвета — только здесь. Дальше по коду: var() и color-mix().
+   ============================================================ */
+:root {
+  color-scheme: light;
+  --white: oklch(100% 0 0); --black: oklch(0% 0 0);
+  --snow: oklch(0.9911 0 0);            /* ≈#FBFBFB */
+  --eclipse: oklch(0.2103 0.0059 285.89); /* ≈#18181B */
+  --background: oklch(0.9702 0 0);      /* ≈#F7F7F8 */
+  --foreground: var(--eclipse);
+  --surface: var(--white); --overlay: var(--white);
+  --muted: oklch(0.5517 0.0138 285.94); /* ≈#6E7075 */
+  --default: oklch(94% 0.001 286.375); --default-foreground: var(--eclipse);
+  --accent: oklch(0.6204 0.195 253.83); --accent-foreground: var(--snow);
+  --success: oklch(0.7329 0.1935 150.81); --success-foreground: var(--eclipse);
+  --warning: oklch(0.7819 0.1585 72.33); --warning-foreground: var(--eclipse);
+  --danger: oklch(0.6532 0.2328 25.74); --danger-foreground: var(--snow);
+  --segment: var(--white);
+  --border: oklch(92% 0.004 286.32); --separator: oklch(92% 0.004 286.32);
+  --focus: var(--accent); --link: var(--foreground); --backdrop: rgba(0,0,0,0.5);
+  --surface-shadow: 0 2px 4px 0 rgba(0,0,0,0.04), 0 1px 2px 0 rgba(0,0,0,0.06), 0 0 1px 0 rgba(0,0,0,0.06);
+  --overlay-shadow: 0 4px 16px 0 rgba(24,24,27,0.08), 0 8px 24px 0 rgba(24,24,27,0.09);
+  --radius: 0.5rem;
+  --radius-lg: calc(var(--radius) * 1.5); /* поля: инпуты, карточки, панели */
+  /* Производные контраста AA (те же hue, затемнён/осветлён до ≥4.5:1) */
+  --accent-solid: oklch(0.50 0.21 253.83);  /* заливка CTA: контраст с --accent-foreground */
+  --accent-text: oklch(0.50 0.21 253.83);   /* мелкий акцентный текст/ссылки */
+  --muted-text: oklch(0.52 0.0138 285.94);  /* приглушённый текст: ≥4.5:1 на --background */
+}
+[data-theme="dark"] {
+  color-scheme: dark;
+  --background: oklch(12% 0.005 285.823); /* ≈#131316 */
+  --foreground: var(--snow);
+  --surface: oklch(0.2103 0.0059 285.89); /* ≈#18181B */
+  --overlay: oklch(0.22 0.0059 285.89);
+  --muted: oklch(70.5% 0.015 286.067);    /* ≈#A1A1AA */
+  --default: oklch(27.4% 0.006 286.033); --default-foreground: var(--snow);
+  --warning: oklch(0.8203 0.1388 76.34);
+  --danger: oklch(0.594 0.1967 24.63);
+  --segment: oklch(0.3964 0.01 285.93);   /* ≈#2E2E33 */
+  --border: oklch(22% 0.006 286.033); --separator: oklch(22% 0.006 286.033);
+  --backdrop: rgba(0,0,0,0.6);
+  --surface-shadow: 0 0 #0000; --overlay-shadow: 0 0 #0000; /* в dark теней нет */
+  --accent-solid: oklch(0.52 0.20 253.83);
+  --accent-text: oklch(0.72 0.14 253.83);
+  --muted-text: var(--muted);
+}
+
+/* ============ БАЗА ============ */
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-size: 16px; line-height: 1.6;
+  background: var(--background); color: var(--foreground);
+  overflow-x: clip;
+  transition: background-color .2s ease, color .2s ease;
+}
+img { max-width: 100%; display: block; }
+a { color: var(--link); cursor: pointer; }
+button { font: inherit; cursor: pointer; }
+h1, h2, h3 { margin: 0; font-weight: 800; line-height: 1.15; letter-spacing: -0.02em; }
+p { margin: 0; }
+ul { margin: 0; padding: 0; list-style: none; }
+section[id] { scroll-margin-top: 152px; }
+::selection { background: var(--accent); color: var(--accent-foreground); }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+.skip { position: absolute; left: -9999px; }
+.skip:focus { left: 12px; top: 12px; z-index: 100; background: var(--surface); color: var(--foreground); padding: 8px 16px; border: 1px solid var(--focus); border-radius: var(--radius); font-weight: 600; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }
+}
+
+/* ============ УТИЛИТЫ ============ */
+.container { max-width: 1280px; margin-inline: auto; padding-inline: clamp(16px, 4vw, 32px); }
+@media (min-width: 1440px) { .container { padding-inline: 48px; } }
+.eyebrow { margin: 0 0 12px; font-size: 11px; font-weight: 700; letter-spacing: .22em; text-transform: uppercase; color: var(--accent-text); }
+.eyebrow-dark { margin: 0 0 12px; font-size: 11px; font-weight: 700; letter-spacing: .22em; text-transform: uppercase; color: color-mix(in oklab, var(--snow) 70%, transparent); }
+.h1 { font-size: clamp(28px, 4vw, 44px); line-height: 1.1; max-width: 768px; text-wrap: balance; }
+.num { font-variant-numeric: tabular-nums; letter-spacing: .02em; }
+
+/* ============ КНОПКИ ============ */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  height: 48px; padding: 0 28px; border-radius: 999px; border: 1.5px solid transparent;
+  font-size: 14px; font-weight: 600; text-decoration: none; white-space: nowrap;
+  transition: background-color .2s, color .2s, border-color .2s;
+}
+.btn-sm { height: 40px; padding: 0 22px; font-size: 13px; }
+.btn-primary { background: var(--accent-solid); color: var(--accent-foreground); }
+.btn-primary:hover { background: color-mix(in oklab, var(--accent-solid) 90%, var(--accent-foreground) 10%); }
+.btn-outline { border-color: var(--border); color: var(--foreground); background: transparent; }
+.btn-outline:hover { border-color: var(--accent); color: var(--accent-text); background: color-mix(in oklab, var(--accent) 15%, transparent); }
+.btn-ghost-light { border-color: color-mix(in oklab, var(--snow) 40%, transparent); color: var(--snow); background: transparent; }
+.btn-ghost-light:hover { border-color: var(--snow); background: color-mix(in oklab, var(--snow) 10%, transparent); }
+
+/* ============ ЧИПЫ / СТАТУСЫ ============ */
+.chips { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 16px; font-size: 12px; }
+.chips-label { font-weight: 600; letter-spacing: .06em; color: var(--muted-text); margin-right: 4px; }
+.chip {
+  display: inline-flex; align-items: center; height: 30px; padding: 0 14px;
+  border-radius: 999px; border: 1px solid var(--border); background: var(--surface);
+  color: color-mix(in oklab, var(--foreground) 75%, var(--background));
+  font-size: 12px; font-weight: 600; text-decoration: none;
+  transition: border-color .2s, color .2s, background-color .2s;
+}
+.chip:hover { border-color: var(--accent); color: var(--accent-text); }
+.chip.is-active { background: var(--accent-solid); border-color: var(--accent-solid); color: var(--accent-foreground); }
+.stock {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-size: 11.5px; font-weight: 700; letter-spacing: .08em; color: var(--foreground);
+}
+.stock::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--success); flex-shrink: 0; }
+.stock--order::before { background: var(--muted); }
+
+/* ============ КАРТОЧКИ ============ */
+.card {
+  position: relative; display: flex; flex-direction: column; overflow: hidden;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); box-shadow: var(--surface-shadow);
+  transition: border-color .3s, background-color .2s;
+}
+.card:hover { border-color: color-mix(in oklab, var(--accent) 45%, var(--border)); }
+.card-media { aspect-ratio: 4 / 3; overflow: hidden; display: grid; place-items: center; background: var(--white); }
+.card-media img { width: 100%; height: 100%; object-fit: cover; }
+.card-body { display: flex; flex-direction: column; gap: 6px; padding: 20px; flex: 1; border-top: 1px solid var(--border); }
+.card-link {
+  margin-top: auto; padding-top: 8px; align-self: flex-start;
+  font-size: 13px; font-weight: 600; color: var(--accent-text);
+  text-decoration: underline; text-underline-offset: 4px;
+  text-decoration-color: color-mix(in oklab, var(--accent) 35%, transparent);
+  transition: text-decoration-color .2s;
+}
+.card-link:hover { text-decoration-color: currentColor; }
+.product-code { font-size: 12.5px; font-weight: 700; letter-spacing: .05em; font-variant-numeric: tabular-nums; color: var(--accent-text); }
+.product-title { font-size: 14.5px; font-weight: 600; line-height: 1.4; letter-spacing: 0; }
+.product-meta { font-size: 12.5px; color: var(--muted); }
+.product-meta b { color: var(--foreground); font-weight: 600; }
+/* Слот без фото */
+.card--slot {
+  border-style: dashed;
+  border-color: color-mix(in oklab, var(--muted) 45%, transparent);
+  background: color-mix(in oklab, var(--surface) 60%, var(--background));
+  box-shadow: none;
+}
+.card--slot:hover { border-color: var(--muted); }
+.card--slot .card-body { border-top: 1px dashed color-mix(in oklab, var(--muted) 45%, transparent); }
+.card--slot .card-media { background: transparent; }
+/* Dark: лёгкий тон белых фото-плиток (10% eclipse), слоты без фото не трогаем */
+[data-theme="dark"] .card-media { position: relative; }
+[data-theme="dark"] .card-media::after { content: ''; position: absolute; inset: 0; background: color-mix(in oklab, var(--eclipse) 10%, transparent); pointer-events: none; }
+[data-theme="dark"] .card--slot .card-media::after { content: none; }
+.slot-inner { text-align: center; }
+.slot-icon { color: var(--muted); opacity: .8; margin-inline: auto; }
+.slot-label { margin-top: 12px; font-size: 10.5px; font-weight: 700; letter-spacing: .15em; color: var(--muted); }
+.slot-note { margin-top: 4px; font-size: 11.5px; color: var(--muted-text); }
+
+/* ============ ТОПБАР ============ */
+.topbar { background: var(--eclipse); color: color-mix(in oklab, var(--snow) 75%, transparent); font-size: 12.5px; }
+.topbar-inner { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 4px 16px; min-height: 36px; padding-block: 6px; }
+.topbar-links { display: flex; align-items: center; gap: 20px; }
+.topbar a { color: inherit; text-decoration: none; transition: color .2s; }
+.topbar a:hover { color: var(--snow); }
+@media (max-width: 900px) { .topbar { display: none; } }
+
+/* ============ ШАПКА ============ */
+.site-header {
+  position: sticky; top: 0; z-index: 50;
+  background: color-mix(in oklab, var(--surface) 92%, transparent);
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--border);
+}
+.header-inner { display: flex; align-items: center; gap: clamp(12px, 2vw, 24px); height: 76px; }
+.logo { display: flex; flex-shrink: 0; }
+.logo img { height: 40px; width: auto; }
+.logo-dark { display: none; }
+[data-theme="dark"] .logo-light { display: none; }
+[data-theme="dark"] .logo-dark { display: block; }
+.main-nav { display: none; align-items: center; gap: 28px; font-size: 14.5px; font-weight: 500; }
+@media (min-width: 1181px) { .main-nav { display: flex; } }
+.main-nav a { color: var(--muted); text-decoration: none; transition: color .2s; }
+.main-nav a:hover { color: var(--accent-text); }
+.main-nav a.is-active { color: var(--accent-text); font-weight: 600; text-decoration: underline; text-underline-offset: 4px; }
+.header-phone { display: none; margin-left: auto; align-items: center; gap: 8px; font-size: 13.5px; font-weight: 600; color: var(--foreground); text-decoration: none; transition: color .2s; }
+.header-phone:hover { color: var(--accent-text); }
+@media (min-width: 640px) { .header-phone { display: inline-flex; } }
+.header-cta { display: none; flex-shrink: 0; }
+@media (min-width: 900px) { .header-cta { display: inline-flex; } }
+.theme-toggle, .menu-btn {
+  display: grid; place-items: center; width: 40px; height: 40px; flex-shrink: 0;
+  border: 1px solid var(--border); border-radius: var(--radius);
+  background: transparent; color: var(--foreground);
+  transition: background-color .2s, border-color .2s;
+}
+.theme-toggle:hover, .menu-btn:hover { background: var(--default); border-color: var(--muted); }
+.theme-toggle .i-sun { display: none; }
+[data-theme="dark"] .theme-toggle .i-sun { display: block; }
+[data-theme="dark"] .theme-toggle .i-moon { display: none; }
+@media (min-width: 1181px) { .menu-btn { display: none; } }
+@media (max-width: 639px) { .menu-btn { margin-left: auto; } }
+.menu-btn .bars { display: block; width: 20px; }
+.menu-btn .bars span { display: block; width: 20px; height: 2px; border-radius: 2px; background: currentColor; margin: 2.5px 0; }
+.mobile-menu { display: none; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); background: var(--surface); }
+.mobile-menu.open { display: block; }
+.mobile-menu nav { padding: 12px 16px 16px; }
+.mobile-menu a:not(.btn) { display: block; padding: 12px 0; border-bottom: 1px solid var(--border); font-size: 15px; font-weight: 500; color: var(--foreground); text-decoration: none; }
+.mobile-menu a:not(.btn):hover { color: var(--accent-text); }
+.mobile-menu a.is-active { color: var(--accent-text); font-weight: 600; }
+.mobile-menu .btn { width: 100%; margin-top: 12px; }
+
+/* ============ ХЛЕБНЫЕ КРОШКИ + ЗАГОЛОВОК ============ */
+.page-head { padding: clamp(24px, 3vw, 48px) 0 24px; }
+.breadcrumbs { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 20px; font-size: 13px; color: var(--muted-text); }
+.breadcrumbs a { color: inherit; text-decoration: none; transition: color .2s; }
+.breadcrumbs a:hover { color: var(--accent-text); }
+.breadcrumbs .current { color: var(--foreground); font-weight: 500; }
+.page-lead { margin-top: 16px; font-size: 15.5px; line-height: 1.65; color: var(--muted-text); max-width: 640px; }
+
+/* ============ ЛИПКАЯ ПАНЕЛЬ ПОИСКА ============ */
+.toolbar {
+  position: sticky; top: 76px; z-index: 40;
+  background: color-mix(in oklab, var(--surface) 95%, transparent);
+  backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  border-block: 1px solid var(--border); padding-block: 16px;
+}
+.toolbar .search { margin-top: 0; }
+.search {
+  display: flex; align-items: center; gap: 12px; width: 100%; max-width: 640px;
+  height: 52px; padding-left: 20px; padding-right: 6px;
+  background: var(--background); border: 1px solid var(--border);
+  border-radius: var(--radius-lg); transition: border-color .2s;
+}
+.search:focus-within { border-color: var(--focus); }
+.search-icon { color: var(--muted); flex-shrink: 0; }
+.search input { flex: 1; min-width: 0; height: 100%; border: 0; background: transparent; font: inherit; font-size: 14px; color: var(--foreground); outline: none; }
+.search input::placeholder { color: var(--muted-text); }
+
+/* ============ ФИЛЬТР-СТРОКА ============ */
+.filterbar { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 24px; padding-block: 20px; font-size: 13px; }
+.filter-group { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; min-width: 0; }
+.filter-label { font-size: 11px; font-weight: 600; letter-spacing: .15em; color: var(--muted-text); }
+.filter-reset { color: var(--muted-text); text-decoration: none; transition: color .2s; }
+.filter-reset:hover { color: var(--accent-text); }
+.count { margin-left: auto; font-size: 12px; font-weight: 600; letter-spacing: .06em; font-variant-numeric: tabular-nums; color: var(--muted-text); }
+
+/* ============ СЕТКА КАРТОЧЕК ============ */
+.grid { display: grid; gap: 24px; grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 620px) { .grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1181px) { .grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.grid-bottom { padding-bottom: clamp(56px, 8vw, 96px); }
+
+/* ============ CTA: НЕ НАШЛИ АРТИКУЛ ============ */
+.cta-section { position: relative; overflow: hidden; background: var(--eclipse); color: var(--snow); }
+.glow {
+  position: absolute; width: 680px; height: 680px; border-radius: 50%;
+  background: radial-gradient(closest-side, var(--accent), transparent 70%);
+  opacity: 0; pointer-events: none;
+}
+[data-theme="dark"] .glow { opacity: .12; } /* один сдержанный radial-glow, только dark */
+.cta-section .glow { bottom: -300px; left: -180px; }
+.cta-inner { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 32px; padding-block: clamp(48px, 7vw, 80px); }
+@media (min-width: 900px) { .cta-inner { flex-direction: row; align-items: center; justify-content: space-between; gap: 48px; } }
+.cta-section h2 { color: var(--snow); font-size: clamp(24px, 3vw, 30px); max-width: 560px; }
+.cta-text { margin-top: 12px; font-size: 15px; line-height: 1.6; color: color-mix(in oklab, var(--snow) 70%, transparent); max-width: 560px; }
+.cta-actions { display: flex; flex-direction: column; gap: 12px; flex-shrink: 0; }
+@media (min-width: 560px) { .cta-actions { flex-direction: row; } }
+
+/* ============ ФУТЕР ============ */
+.footer { background: var(--eclipse); color: color-mix(in oklab, var(--snow) 70%, transparent); border-top: 1px solid color-mix(in oklab, var(--snow) 10%, transparent); }
+.footer a { color: inherit; text-decoration: none; transition: color .2s; }
+.footer a:hover { color: var(--snow); }
+.footer-grid { display: grid; gap: 40px; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); padding-block: 48px; }
+.footer-logo { height: 48px; width: auto; }
+.footer-heading { margin: 0 0 12px; font-size: 10.5px; font-weight: 600; letter-spacing: .2em; text-transform: uppercase; color: color-mix(in oklab, var(--snow) 60%, transparent); }
+.footer ul { display: grid; gap: 8px; font-size: 13.5px; }
+.footer-requisites { font-size: 12.5px; line-height: 1.7; }
+.footer-requisites .num { display: block; }
+.footer-demo { margin-top: 12px; color: color-mix(in oklab, var(--snow) 60%, transparent); }
+.footer-copy { border-top: 1px solid color-mix(in oklab, var(--snow) 10%, transparent); padding-block: 16px; font-size: 11px; color: color-mix(in oklab, var(--snow) 60%, transparent); }
+</style>
+</head>
+<body>
+<a href="#main" class="skip">Перейти к каталогу</a>
+
+<!-- ТОПБАР -->
+<div class="topbar">
+  <div class="container topbar-inner">
+    <p>Саратов · Энгельс · Балаково · Балашов · Пугачёв · склад пос. Расково</p>
+    <div class="topbar-links">
+      <a href="https://t.me/atehnikaplus" target="_blank" rel="noopener">Telegram</a>
+      <a href="https://api.whatsapp.com/send/?phone=+79271488880" target="_blank" rel="noopener">WhatsApp</a>
+    </div>
+  </div>
+</div>
+
+<!-- ШАПКА -->
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="index_v3.html" class="logo" aria-label="С-Агротехника — на главную">
+      <img src="assets/logo-footer.svg" alt="С-Агротехника" class="logo-light" width="174" height="73" fetchpriority="high">
+      <img src="assets/logo-footer-dark.svg" alt="" class="logo-dark" width="174" height="73" aria-hidden="true">
+    </a>
+    <nav class="main-nav" aria-label="Основное меню">
+      <a href="index_v3.html#tech">Техника</a>
+      <a href="catalog_v3.html" class="is-active" aria-current="page">Запчасти</a>
+      <a href="index_v3.html#reviews">Отзывы</a>
+      <a href="index_v3.html#contacts">Контакты</a>
+    </nav>
+    <a href="tel:+78452390081" class="header-phone" aria-label="Позвонить">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 2 .7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.9.5 2.8.6a2 2 0 0 1 1.7 2Z"/></svg>
+      <span class="num">8 (8452) 39-00-81</span>
+    </a>
+    <a href="https://api.whatsapp.com/send/?phone=+79271488880" target="_blank" rel="noopener" class="btn btn-outline btn-sm header-cta">Запросить цену</a>
+    <button id="themeToggle" class="theme-toggle" type="button" aria-label="Переключить цветовую тему">
+      <svg class="i-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+      <svg class="i-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+    </button>
+    <button id="menuBtn" class="menu-btn" type="button" aria-label="Меню" aria-expanded="false" aria-controls="mobileMenu">
+      <span class="bars" aria-hidden="true"><span></span><span></span><span></span></span>
+    </button>
+  </div>
+</header>
+
+<!-- МОБИЛЬНОЕ МЕНЮ -->
+<div id="mobileMenu" class="mobile-menu">
+  <nav aria-label="Мобильное меню">
+    <a href="index_v3.html#tech" class="menu-link">Техника</a>
+    <a href="catalog_v3.html" class="menu-link is-active" aria-current="page">Запчасти</a>
+    <a href="index_v3.html#reviews" class="menu-link">Отзывы</a>
+    <a href="index_v3.html#contacts" class="menu-link">Контакты</a>
+    <a href="tel:+78452390081" class="menu-link num">8 (8452) 39-00-81</a>
+    <a href="https://api.whatsapp.com/send/?phone=+79271488880" target="_blank" rel="noopener" class="menu-link btn btn-primary">Запросить цену</a>
+  </nav>
+</div>
+
+<main id="main">
+
+  <!-- ХЛЕБНЫЕ КРОШКИ + ЗАГОЛОВОК -->
+  <section class="page-head">
+    <div class="container">
+      <nav class="breadcrumbs" aria-label="Хлебные крошки">
+        <a href="index_v3.html">Главная</a>
+        <span aria-hidden="true">/</span>
+        <span class="current">Запчасти</span>
+      </nav>
+      <p class="eyebrow">КАТАЛОГ · ЦЕНЫ ПО ЗАПРОСУ</p>
+      <h1 class="h1">Запчасти по артикулу — ТНВД, помпы, актуаторы</h1>
+      <p class="page-lead">Оригинальные детали HAFFEN · WEICHAI · BOSCH · CUMMINS для двигателей ISF2.8, ISF3.8, 6CT, WP10. Ходовые позиции — на складе в Расково, отправим за 1 день; остальное — под заказ.</p>
+    </div>
+  </section>
+
+  <!-- ПОИСК + ЧИПЫ -->
+  <section class="toolbar">
+    <div class="container">
+      <form action="#" method="get" class="search" role="search">
+        <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <label class="sr-only" for="q">Поиск по артикулу или модели</label>
+        <input id="q" name="q" type="search" inputmode="search" autocomplete="off" placeholder="0445020119 · 5263374 · ISF2.8">
+        <button type="submit" class="btn btn-primary btn-sm">Найти</button>
+      </form>
+      <div class="chips">
+        <span class="chips-label">ДВИГАТЕЛЬ:</span>
+        <a href="#" class="chip is-active" aria-current="true">Все</a>
+        <a href="#" class="chip">ISF2.8</a>
+        <a href="#" class="chip">ISF3.8</a>
+        <a href="#" class="chip">6CT</a>
+        <a href="#" class="chip">WP10</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ФИЛЬТР-СТРОКА -->
+  <section>
+    <div class="container filterbar">
+      <div class="filter-group">
+        <span class="filter-label">БРЕНД</span>
+        <a href="#" class="chip is-active" aria-current="true">Все</a>
+        <a href="#" class="chip">HAFFEN</a>
+        <a href="#" class="chip">WEICHAI</a>
+        <a href="#" class="chip">BOSCH</a>
+        <a href="#" class="chip">CUMMINS</a>
+      </div>
+      <a href="#" class="filter-reset">× Сбросить</a>
+      <span class="count">НАЙДЕНО: 8 позиций <!-- TODO: реальный счётчик miniShop2 --></span>
+    </div>
+  </section>
+
+  <!-- СЕТКА КАРТОЧЕК -->
+  <section class="grid-bottom">
+    <div class="container grid grid-4">
+
+      <!-- 1. ТНВД -->
+      <article class="card">
+        <div class="card-media">
+          <img src="assets/tnvd.jpg" alt="ТНВД ISF2.8 Haffen 0445020119" width="435" height="435" loading="lazy" decoding="async">
+        </div>
+        <div class="card-body">
+          <p class="product-code">АРТ. 0445020119</p>
+          <h3 class="product-title">ТНВД ISF2.8 с регулятором</h3>
+          <p class="product-meta">ДВИГАТЕЛЬ ISF2.8 · <b>HAFFEN</b></p>
+          <p class="stock">В НАЛИЧИИ</p>
+          <a href="index_v3.html#contacts" class="card-link">Запросить цену →</a>
+        </div>
+      </article>
+
+      <!-- 2. Ротор -->
+      <article class="card">
+        <div class="card-media">
+          <img src="assets/rotor.jpg" alt="Ротор масляного насоса ISF2.8 5262898" width="435" height="435" loading="lazy" decoding="async">
+        </div>
+        <div class="card-body">
+          <p class="product-code">АРТ. 5262898</p>
+          <h3 class="product-title">Ротор масляного насоса внешний</h3>
+          <p class="product-meta">ДВИГАТЕЛЬ ISF2.8 · <b>HAFFEN</b></p>
+          <p class="stock">В НАЛИЧИИ</p>
+          <a href="index_v3.html#contacts" class="card-link">Запросить цену →</a>
+        </div>
+      </article>
+
+      <!-- 3. Помпа ISF3.8 -->
+      <article class="card">
+        <div class="card-media">
+          <img src="assets/pompa_isf38.jpg" alt="Насос водяной ISF3.8 5263374" width="435" height="435" loading="lazy" decoding="async">
+        </div>
+        <div class="card-body">
+          <p class="product-code">АРТ. 5263374</p>
+          <h3 class="product-title">Насос водяной ISF3.8</h3>
+          <p class="product-meta">ДВИГАТЕЛЬ ISF3.8 · <b>HAFFEN</b></p>
+          <p class="stock">В НАЛИЧИИ</p>
+          <a href="index_v3.html#contacts" class="card-link">Запросить цену →</a>
+        </div>
+      </article>
+
+      <!-- 4. Помпа 6CT -->
+      <article class="card">
+        <div class="card-media">
+          <img src="assets/pompa_6ct.jpg" alt="Насос водяной 6CT 3800974" width="435" height="435" loading="lazy" decoding="async">
+        </div>
+        <div class="card-body">
+          <p class="product-code">АРТ. 3800974</p>
+          <h3 class="product-title">Насос водяной 6CT</h3>
+          <p class="product-meta">ДВИГАТЕЛЬ 6CT · <b>HAFFEN</b></p>
+          <p class="stock">В НАЛИЧИИ</p>
+          <a href="index_v3.html#contacts" class="card-link">Запросить цену →</a>
+        </div>
+      </article>
+
+      <!-- 5. Шестерня -->
+      <article class="card">
+        <div class="card-media">
+          <img src="assets/shesternya.jpg" alt="Шестерня масляного насоса WP10 612600070364" width="435" height="435" loading="lazy" decoding="async">
+        </div>
+        <div class="card-body">
+          <p class="product-code">АРТ. 612600070364</p>
+          <h3 class="product-title">Шестерня масляного насоса WD615/WP10</h3>
+          <p class="product-meta">ДВИГАТЕЛЬ WP10 · <b>WEICHAI</b></p>
+          <p class="stock">В НАЛИЧИИ</p>
+          <a href="index_v3.html#contacts" class="card-link">Запросить цену →</a>
+        </div>
+      </article>
+
+      <!-- 6. Слот -->
+      <article class="card card--slot">
+        <div class="card-media">
+          <div class="slot-inner">
+            <svg class="slot-icon" width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3Z"/><circle cx="12" cy="13" r="3.5"/></svg>
+            <p class="slot-label">ФОТО-СЛОТ · 02</p>
+            <p class="slot-note">пересъёмка / поставщик</p>
+          </div>
+        </div>
+        <div class="card-body">
+          <p class="product-code">АРТ. 0928400672</p>
+          <h3 class="product-title">Актуатор ТНВД (дозировочный блок)</h3>
+          <p class="product-meta">ДВИГАТЕЛЬ ISF2.8 · <b>BOSCH</b></p>
+          <p class="stock stock--order">ПОД ЗАКАЗ</p>
+          <a href="index_v3.html#contacts" class="card-link">Запросить цену →</a>
+        </div>
+      </article>
+
+      <!-- 7. Слот -->
+      <article class="card card--slot">
+        <div class="card-media">
+          <div class="slot-inner">
+            <svg class="slot-icon" width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3Z"/><circle cx="12" cy="13" r="3.5"/></svg>
+            <p class="slot-label">ФОТО-СЛОТ · 03</p>
+            <p class="slot-note">пересъёмка / поставщик</p>
+          </div>
+        </div>
+        <div class="card-body">
+          <p class="product-code">АРТ. 5288373F</p>
+          <h3 class="product-title">Кольцо форсунки</h3>
+          <p class="product-meta">ДВИГАТЕЛЬ ISF3.8 · <b>CUMMINS</b></p>
+          <p class="stock stock--order">ПОД ЗАКАЗ</p>
+          <a href="index_v3.html#contacts" class="card-link">Запросить цену →</a>
+        </div>
+      </article>
+
+      <!-- 8. Слот -->
+      <article class="card card--slot">
+        <div class="card-media">
+          <div class="slot-inner">
+            <svg class="slot-icon" width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3Z"/><circle cx="12" cy="13" r="3.5"/></svg>
+            <p class="slot-label">ФОТО-СЛОТ · 04</p>
+            <p class="slot-note">пересъёмка / поставщик</p>
+          </div>
+        </div>
+        <div class="card-body">
+          <p class="product-code">АРТ. 199112530281</p>
+          <h3 class="product-title">Патрубок радиатора WP10</h3>
+          <p class="product-meta">ДВИГАТЕЛЬ WP10 · <b>WEICHAI</b></p>
+          <p class="stock stock--order">ПОД ЗАКАЗ</p>
+          <a href="index_v3.html#contacts" class="card-link">Запросить цену →</a>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- НЕ НАШЛИ АРТИКУЛ -->
+  <section class="cta-section">
+    <div class="glow" aria-hidden="true"></div>
+    <div class="container cta-inner">
+      <div>
+        <p class="eyebrow-dark">НЕ НАШЛИ АРТИКУЛ?</p>
+        <h2>Пришлите фото таблички двигателя — подберём деталь за час</h2>
+        <p class="cta-text">В базе 2000+ позиций для ISF2.8, ISF3.8, 6CT, WP10 и ещё десятков моторов. Работаем в WhatsApp и Telegram — там быстрее всего.</p>
+      </div>
+      <div class="cta-actions">
+        <a href="https://api.whatsapp.com/send/?phone=+79271488880" target="_blank" rel="noopener" class="btn btn-primary">Пришлите артикул в WhatsApp</a>
+        <a href="tel:+78452390081" class="btn btn-ghost-light">Позвонить</a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ФУТЕР -->
+<footer id="contacts" class="footer">
+  <div class="container footer-grid">
+    <img src="assets/logo-footer-dark.svg" alt="С-Агротехника" class="footer-logo" width="174" height="73" loading="lazy" decoding="async">
+    <div>
+      <p class="footer-heading">КАТАЛОГ</p>
+      <ul>
+        <li><a href="index_v3.html#tech">Техника</a></li>
+        <li><a href="catalog_v3.html">Запчасти</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="footer-heading">ГОРОДА</p>
+      <ul>
+        <li>Саратов</li><li>Энгельс</li><li>Балаково</li><li>Балашов · Пугачёв</li>
+      </ul>
+    </div>
+    <div>
+      <p class="footer-heading">МЫ В СЕТИ</p>
+      <ul>
+        <li><a href="https://t.me/atehnikaplus" target="_blank" rel="noopener">Telegram</a></li>
+        <li><a href="https://vk.com/agrotehnikaplus" target="_blank" rel="noopener">ВКонтакте</a></li>
+        <li><a href="https://ok.ru/group/70000034115083" target="_blank" rel="noopener">Одноклассники</a></li>
+      </ul>
+    </div>
+    <div class="footer-requisites">
+      <p>ООО «С-Агротехника»</p>
+      <p>ИНН 6449971753 · ОГРН 1046404905128</p>
+      <p>Энгельс, пр-кт Строителей, 58</p>
+      <p class="num">8 (8452) 39-00-81</p>
+      <p class="footer-demo">ДЕМО-МАКЕТ V3 · НЕ ПУБЛИКАЦИЯ</p>
+    </div>
+  </div>
+  <div class="footer-copy">
+    <p class="container">© 2004–2026 · вариант 2: витрина техники + каталог запчастей</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  /* Тема: старт light, выбор в localStorage('v3-theme') */
+  var root = document.documentElement;
+  var toggle = document.getElementById('themeToggle');
+  toggle.addEventListener('click', function () {
+    var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    try { localStorage.setItem('v3-theme', next); } catch (e) {}
+  });
+  /* Мобильное меню */
+  var btn = document.getElementById('menuBtn');
+  var menu = document.getElementById('mobileMenu');
+  function closeMenu() {
+    menu.classList.remove('open');
+    btn.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
+  }
+  btn.addEventListener('click', function () {
+    var open = menu.classList.toggle('open');
+    btn.setAttribute('aria-expanded', String(open));
+    document.body.style.overflow = open ? 'hidden' : '';
+  });
+  menu.querySelectorAll('a').forEach(function (a) { a.addEventListener('click', closeMenu); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeMenu(); });
+  matchMedia('(min-width: 1181px)').addEventListener('change', function (m) { if (m.matches) closeMenu(); });
+})();
+</script>
+</body>
+</html>
